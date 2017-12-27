@@ -64,7 +64,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 
 	hwnd = CreateWindow(
 		szWndClassName,		            //windows class name
-		"Joezeo",			            //windows caption	
+		"Random Heroes",			    //windows caption	
 		WS_OVERLAPPEDWINDOW,            //windows style
 		CW_USEDEFAULT,		            //intial x position
 		CW_USEDEFAULT,		            //intial y position
@@ -79,8 +79,10 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 	UpdateWindow(hwnd);
 
 	while (GetMessage(&msg, NULL, 0, 0)) {
+
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+
 	}
 
 	return msg.wParam;
@@ -108,6 +110,8 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 		prole  = InitRole(g_hinst);
 		pimage = InitImage(hwnd);
 
+		SetTimer(hwnd, TIMER, 50, NULL);
+
 		return 0;
 
 	case WM_PAINT:
@@ -125,6 +129,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	case WM_TIMER:
 
+		RoleJumpProc(prole, hwnd);
 
 		return 0;
 
@@ -137,6 +142,8 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 		FreeSystem(psys);
 		FreeRole(prole);
 		FreeImage(pimage);
+
+		KillTimer(hwnd, TIMER);
 
 		PostQuitMessage(0);
 

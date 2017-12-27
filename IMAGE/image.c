@@ -55,5 +55,7 @@ DrawImage(const PIMAGE _pimage, HWND _hwnd) {
 
 	ReleaseDC(_hwnd, _hdc);
 
+	return OK;
+
 }
 // 画出IMAGE实例中保存的图像

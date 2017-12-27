@@ -24,10 +24,19 @@
 
 static STATUS
 __moveRole(PROLE, WPARAM, HWND);
-// 角色移动
+// 角色移动,跳跃
 
 static STATUS
-__cleanRect(PROLE, HWND);
+__JumpRole(PROLE, HWND);
+// 角色跳跃开始，设立定时器
+
+static STATUS
+__HighRole(PROLE);
+// 角色跳跃处于最高处的状态
+
+static STATUS
+__FallRole(PROLE);
+// 判断角色跳跃完成，关闭定时器
 
 
 /*
@@ -51,6 +60,9 @@ InitRole(HINSTANCE _hins) {
 	_prole->m_index      = 0;
 	_prole->m_speed      = 5;
 	_prole->m_keyDownCnt = 0;
+	_prole->m_maxHeight  = 15;
+	_prole->m_curHeight  = 0;
+	_prole->m_highStatus = FALSE;
 	
 	GetObject(_prole->m_hbmp, sizeof(BITMAP), &_bmp);
 	_prole->m_size.cx = (_bmp.bmWidth) / 3;
@@ -139,6 +151,47 @@ ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd, PSYS _psys) {
 // 角色控制，移动跳跃
 
 
+
+STATUS
+RoleJumpProc(PROLE _prole, HWND _hwnd) {
+
+	assert(_prole != NULL);
+	assert(_hwnd != NULL);
+
+	if (_prole->m_status == 0)
+		return OK;
+
+	// 跳跃后没有达到最大高度
+	if (!(_prole->m_highStatus)) {
+
+		if (_prole->m_curHeight < 5)
+			_prole->m_index = 0;
+		else
+			_prole->m_index = 1;
+
+		_prole->m_pos.y++;
+		_prole->m_curHeight++;
+
+	}
+	else if (_prole->m_curHeight == _prole->m_maxHeight) {
+
+		__HighRole(_prole);
+
+	}
+	else if (_prole->m_highStatus) {
+
+		__FallRole(_prole);
+
+	}
+
+	InvalidateRect(_hwnd, NULL, FALSE);
+
+	return OK;
+
+}
+// 角色跳跃过程控制
+
+
 /*
 +
 -			静态函数定义
@@ -165,13 +218,19 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 		_prole->m_pos.x += _prole->m_speed;
 
 		InvalidateRect(_hwnd, NULL, TRUE);
-		UpdateWindow(_hwnd);
+
+		break;
+
+	case VK_UP:
+
+		if(_prole->m_status != 1)
+			__JumpRole(_prole, _hwnd);
 
 		break;
 
 	}
 
-	if (_prole->m_keyDownCnt == 5) {
+	if (_prole->m_keyDownCnt == 5 && _prole->m_status == 0) {
 
 		_prole->m_index++;
 		_prole->m_keyDownCnt = 0;
@@ -188,3 +247,61 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 
 }
 // 角色移动
+
+
+static STATUS
+__JumpRole(PROLE _prole, HWND _hwnd) {
+
+	assert(_prole != NULL);
+
+	_prole->m_status = 2; // 切换角色为起跳状态
+	_prole->m_index  = 0;
+
+	return OK;
+
+}
+// 角色跳跃开始，设立定时器
+
+static STATUS
+__HighRole(PROLE _prole) {
+
+	assert(_prole != NULL);
+
+	_prole->m_index      = 2;
+	_prole->m_highStatus = TRUE;
+	
+	return OK;
+
+}
+// 角色跳跃处于最高处的状态
+
+static STATUS
+__FallRole(PROLE _prole) {
+
+	assert(_prole != NULL);
+	
+	if(_prole->m_status != 1) // 转换角色为落下状态
+		_prole->m_status = 1;
+
+	if (_prole->m_curHeight > 5)
+		_prole->m_index = 0;
+	else if (_prole->m_curHeight > 3)
+		_prole->m_index = 1;
+	else
+		_prole->m_index = 2;
+
+	_prole->m_pos.y--;
+	_prole->m_curHeight--;
+
+	if (_prole->m_curHeight == 0) {
+
+		_prole->m_status     = 0;
+		_prole->m_index      = 0;
+		_prole->m_highStatus = FALSE;
+
+	}
+
+	return OK;
+
+}
+// 判断角色跳跃完成，关闭定时器
