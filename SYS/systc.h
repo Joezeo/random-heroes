@@ -43,7 +43,7 @@ extern "C" {
 
 #define CLI_HEIGHT 384		// 客户区高度
 #define CLI_WIDTH  640		// 客户区宽度
-#define TIMER      1        // TIMER计时器ID
+#define ID_TIMER   1        // TIMER计时器ID
 
 // 状态码定义
 #define OK         1

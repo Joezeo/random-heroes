@@ -27,8 +27,8 @@ __moveRole(PROLE, WPARAM, HWND);
 // 角色移动,跳跃
 
 static STATUS
-__JumpRole(PROLE, HWND);
-// 角色跳跃开始，设立定时器
+__JumpRole(PROLE);
+// 角色跳跃开始
 
 static STATUS
 __HighRole(PROLE);
@@ -36,7 +36,7 @@ __HighRole(PROLE);
 
 static STATUS
 __FallRole(PROLE);
-// 判断角色跳跃完成，关闭定时器
+// 判断角色跳跃完成
 
 
 /*
@@ -189,7 +189,7 @@ RoleJumpProc(PROLE _prole, HWND _hwnd) {
 	return OK;
 
 }
-// 角色跳跃过程控制
+// 角色跳跃过程，此函数由Timer计时器控制
 
 
 /*
@@ -224,7 +224,7 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 	case VK_UP:
 
 		if(_prole->m_status != 1)
-			__JumpRole(_prole, _hwnd);
+			__JumpRole(_prole);
 
 		break;
 
@@ -248,9 +248,8 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 }
 // 角色移动
 
-
 static STATUS
-__JumpRole(PROLE _prole, HWND _hwnd) {
+__JumpRole(PROLE _prole) {
 
 	assert(_prole != NULL);
 

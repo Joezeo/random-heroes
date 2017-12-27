@@ -76,7 +76,7 @@ ControlRole(PROLE, WPARAM, HWND, PSYS);
 
 STATUS
 RoleJumpProc(PROLE, HWND);
-// 角色跳跃过程控制
+// 角色跳跃过程，此函数由Timer计时器控制
 
 
 #ifdef __cplusplus

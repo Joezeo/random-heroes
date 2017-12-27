@@ -31,7 +31,7 @@ HINSTANCE                 g_hinst;
 int WINAPI 
 WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd){
 
-	static char szWndClassName[] = "gameWin";
+	static char szWndClassName[] = TEXT("gameWin");
 
 	HWND                  hwnd;
 	MSG                   msg;
@@ -51,7 +51,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 	wndclass.lpszClassName = szWndClassName;
 
 	if (!RegisterClass(&wndclass)) {
-		MessageBox(NULL, "×¢²áÊ§°Ü", "´íÎó", MB_ICONERROR);
+		MessageBox(NULL, TEXT("×¢²áÊ§°Ü"), TEXT("´íÎó"), MB_ICONERROR);
 		return 0;
 	}
 
@@ -64,7 +64,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 
 	hwnd = CreateWindow(
 		szWndClassName,		            //windows class name
-		"Random Heroes",			    //windows caption	
+		TEXT("Random Heroes"),			//windows caption	
 		WS_OVERLAPPEDWINDOW,            //windows style
 		CW_USEDEFAULT,		            //intial x position
 		CW_USEDEFAULT,		            //intial y position
@@ -110,7 +110,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 		prole  = InitRole(g_hinst);
 		pimage = InitImage(hwnd);
 
-		SetTimer(hwnd, TIMER, 50, NULL);
+		SetTimer(hwnd, ID_TIMER, 100, NULL);
 
 		return 0;
 
@@ -143,7 +143,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 		FreeRole(prole);
 		FreeImage(pimage);
 
-		KillTimer(hwnd, TIMER);
+		KillTimer(hwnd, ID_TIMER);
 
 		PostQuitMessage(0);
 
@@ -154,5 +154,3 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 	return DefWindowProc(hwnd, message, wparam, lparam);
 
 }
-
-

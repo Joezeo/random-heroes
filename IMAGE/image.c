@@ -1,3 +1,18 @@
+/*
++
+-             作者：Joezeo < joezeo@outlook.com >
++
+-             创建时间：2017.12.27 / 22：33
++
+-             修改时间：2017.12.27 / 22：33
++
+-             文件名称：image.c
++
+-             模块：image模块，所有模块的图像都先绘入IMAGE实例的memDc中,再通过DrawImage画出
++
+-             功能：image模块头文件，包括函数定义
++
+*/
 #include "image.h"
 
 /*
