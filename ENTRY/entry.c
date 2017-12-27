@@ -92,26 +92,42 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 
 /*
 +
--			函数定义
+-			消息处理，逻辑控制
 +
 */
 
 LRESULT CALLBACK 
 WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
-	HDC                            hdc;
-	PAINTSTRUCT                    ps;
-	RECT                           rect;
+	static PROLE                   prole;
 
 	switch (message) {
 
+	case WM_CREATE:
+
+		prole = InitRole(g_hinst);
+
+		return 0;
+
 	case WM_PAINT:
-		hdc = BeginPaint(hwnd, &ps);
-		EndPaint(hwnd, &ps);
+		
+		DrawRole(hwnd, prole);
+
+		return 0;
+
+	case WM_KEYDOWN:
+
+		MoveRole(prole, wparam);
+
+		SendMessage(hwnd, WM_PAINT, 0, 0);
+
 		return 0;
 
 	case WM_DESTROY:
+
+		FreeRole(prole);
 		PostQuitMessage(0);
+
 		return 0;
 
 	}
@@ -121,12 +137,3 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 }
 
 
-VOID
-InitSystem(PSYS _psys) {
-
-	assert(_psys != NULL);
-
-	_psys->m_cliHeight = CLI_HEIGHT;
-	_psys->m_cliWidth  = CLI_WIDTH;
-
-}

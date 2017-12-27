@@ -112,9 +112,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\ENTRY\entry.c" />
+    <ClCompile Include="..\FIGURE\roleifo.c" />
+    <ClCompile Include="..\SYS\systc.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h" />
+    <ClInclude Include="..\FIGURE\roleifo.h" />
+    <ClInclude Include="..\SYS\systc.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\RES\FIGURE\bandit-hd.bmp" />
+    <Image Include="..\RES\FIGURE\bandit.bmp" />
     <Image Include="..\RES\ICON\Icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -26,32 +26,8 @@ extern "C" {
 -			头文件包含
 +
 */
-#include <windows.h>
-#include <assert.h>
-#include "../RandomHeroes/resource.h"
-
-
-/*
-+
--			宏定义
-+
-*/
-
-#define CLI_HEIGHT 384		// 客户区高度
-#define CLI_WIDTH  640		// 客户区宽度
-
-
-/*
-+
--			结构体定义
-+
-*/
-typedef struct {
-
-	UINT    m_cliHeight;
-	UINT    m_cliWidth;
-
-}SYSTEM, SYS, * PSYS;
+#include "../SYS/systc.h"
+#include "../FIGURE/roleifo.h"
 
 
 /*
@@ -64,9 +40,7 @@ LRESULT CALLBACK
 WndProc(HWND, UINT, WPARAM, LPARAM);
 // gameWin 窗口消息处理函数
 
-VOID
-InitSystem(PSYS);
-// 初始化结构体 SYSTEM
+
 
 #ifdef __cplusplus
 }
