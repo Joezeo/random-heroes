@@ -113,11 +113,13 @@
   <ItemGroup>
     <ClCompile Include="..\ENTRY\entry.c" />
     <ClCompile Include="..\FIGURE\roleifo.c" />
+    <ClCompile Include="..\IMAGE\image.c" />
     <ClCompile Include="..\SYS\systc.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h" />
     <ClInclude Include="..\FIGURE\roleifo.h" />
+    <ClInclude Include="..\IMAGE\image.h" />
     <ClInclude Include="..\SYS\systc.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

@@ -25,12 +25,14 @@ extern "C" {
 -			头文件包含
 +
 */
+#pragma comment(lib,"msimg32.lib")
+#pragma comment(lib,"winmm.lib")
+
 #include <assert.h>
 #include <stdlib.h>
 #include <windows.h>
 #include "../RandomHeroes/resource.h"
-#pragma comment(lib,"msimg32.lib")
-#pragma comment(lib,"winmm.lib")
+
 
 
 /*
@@ -41,6 +43,7 @@ extern "C" {
 
 #define CLI_HEIGHT 384		// 客户区高度
 #define CLI_WIDTH  640		// 客户区宽度
+#define TIMER      1        // TIMER计时器ID
 
 // 状态码定义
 #define OK         1
@@ -59,6 +62,7 @@ typedef struct {
 
 	UINT    m_cliHeight;
 	UINT    m_cliWidth;
+	BOOL    m_timerStatus;
 
 }SYSTEM, SYS, *PSYS;
 
@@ -69,9 +73,13 @@ typedef struct {
 +
 */
 
-STATUS
-InitSystem(PSYS);
+PSYS
+InitSystem();
 // 初始化结构体 SYSTEM
+
+STATUS
+FreeSystem(PSYS);
+// 释放SYS实例内存资源
 
 #ifdef __cplusplus
 }

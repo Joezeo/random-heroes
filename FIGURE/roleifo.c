@@ -18,6 +18,20 @@
 
 /*
 +
+-			静态函数前向声明
++
+*/
+
+static STATUS
+__moveRole(PROLE, WPARAM, HWND);
+// 角色移动
+
+static STATUS
+__cleanRect(PROLE, HWND);
+
+
+/*
++
 -			函数定义
 +
 */
@@ -32,10 +46,11 @@ InitRole(HINSTANCE _hins) {
 
 	BITMAP            _bmp;
 
-	_prole->m_hbmp   = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_REAL_ROLE_BAN));
-	_prole->m_status = 0;
-	_prole->m_index = 0;
-	_prole->m_speed = 5;
+	_prole->m_hbmp       = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_REAL_ROLE_BAN));
+	_prole->m_status     = 0;
+	_prole->m_index      = 0;
+	_prole->m_speed      = 5;
+	_prole->m_keyDownCnt = 0;
 	
 	GetObject(_prole->m_hbmp, sizeof(BITMAP), &_bmp);
 	_prole->m_size.cx = (_bmp.bmWidth) / 3;
@@ -43,6 +58,11 @@ InitRole(HINSTANCE _hins) {
 
 	_prole->m_pos.x = 0;
 	_prole->m_pos.y = CLI_HEIGHT - _prole->m_size.cy;
+
+	_prole->m_rectClean.left   = _prole->m_pos.x;
+	_prole->m_rectClean.top    = _prole->m_pos.y;
+	_prole->m_rectClean.right  = _prole->m_rectClean.left + _prole->m_size.cx;
+	_prole->m_rectClean.bottom = _prole->m_rectClean.top + _prole->m_size.cy;
 
 	return _prole;
 
@@ -64,44 +84,36 @@ FreeRole(PROLE _prole) {
 
 
 STATUS
-DrawRole(const HWND _hwnd, const PROLE _prole) {
+DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 
 	assert(_hwnd != NULL);
 	assert(_prole != NULL);
+	assert(_pimage != NULL);
 
-	HDC               _memDc;
 	HDC               _winDc;
 	HDC               _tmpDc;
 	HBITMAP           _tmpHbm;
 
-	_winDc  = GetDC(_hwnd);
-	_memDc  = CreateCompatibleDC(_winDc);
-	_tmpDc  = CreateCompatibleDC(_winDc);
-	_tmpHbm = CreateCompatibleBitmap(_winDc, _prole->m_size.cx, _prole->m_size.cy);
+	_winDc = GetDC(_hwnd);
 
-	SelectObject(_memDc, _tmpHbm);
+	_tmpDc = CreateCompatibleDC(_winDc);
+	_tmpHbm = CreateCompatibleBitmap(_winDc, CLI_WIDTH, CLI_HEIGHT);
+
+	SelectObject(_pimage->m_memDc, _tmpHbm);
 
 	SelectObject(_tmpDc, _prole->m_hbmp);
 
-	TransparentBlt(_memDc,
-		0, 0,
+	TransparentBlt(_pimage->m_memDc,
+		_prole->m_pos.x, _prole->m_pos.y,
 		_prole->m_size.cx, _prole->m_size.cy,
 		_tmpDc,
 		(_prole->m_size.cx)*(_prole->m_index),	// 横向裁剪
 		(_prole->m_size.cy)*(_prole->m_status), // 竖向裁剪
 		_prole->m_size.cx, _prole->m_size.cy,
-		RGB(0, 0, 0));
-
-	BitBlt(_winDc,
-		_prole->m_pos.x, _prole->m_pos.y,
-		_prole->m_size.cx, _prole->m_size.cy,
-		_memDc,
-		0, 0,
-		SRCCOPY);
+		RGB(255, 255, 255));
 
 	ReleaseDC(_hwnd, _winDc);
 	DeleteDC(_tmpDc);
-	DeleteDC(_memDc);
 	DeleteObject(_tmpHbm);
 
 	return OK;
@@ -111,7 +123,30 @@ DrawRole(const HWND _hwnd, const PROLE _prole) {
 
 
 STATUS
-MoveRole(PROLE _prole, WPARAM _wParam) {
+ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd, PSYS _psys) {
+
+	assert(_prole != NULL);
+	assert(_hwnd != NULL);
+	assert(_psys != NULL);
+
+	_prole->m_keyDownCnt++;
+
+	__moveRole(_prole, _wParam, _hwnd);
+
+	return OK;
+
+}
+// 角色控制，移动跳跃
+
+
+/*
++
+-			静态函数定义
++
+*/
+
+static STATUS
+__moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 
 	assert(_prole != NULL);
 
@@ -121,23 +156,35 @@ MoveRole(PROLE _prole, WPARAM _wParam) {
 
 		_prole->m_pos.x -= _prole->m_speed;
 
+		InvalidateRect(_hwnd, NULL, TRUE);
+
 		break;
 
 	case VK_RIGHT:
 
 		_prole->m_pos.x += _prole->m_speed;
 
+		InvalidateRect(_hwnd, NULL, TRUE);
+		UpdateWindow(_hwnd);
+
 		break;
 
 	}
 
-	_prole->m_index++;
+	if (_prole->m_keyDownCnt == 5) {
+
+		_prole->m_index++;
+		_prole->m_keyDownCnt = 0;
+
+	}
 
 	if (_prole->m_index == 3) {
 
 		_prole->m_index = 0;
 
 	}
+
+	return OK;
 
 }
 // 角色移动

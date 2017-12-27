@@ -24,6 +24,9 @@
     <ClCompile Include="..\SYS\systc.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\IMAGE\image.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h">
@@ -36,6 +39,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\SYS\systc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IMAGE\image.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -21,7 +21,6 @@
 -			全局变量定义区
 +
 */
-SYS                       g_sys;
 HINSTANCE                 g_hinst;
 
 /*
@@ -39,8 +38,6 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 	WNDCLASS              wndclass;
 
 	g_hinst = hInstance;
-
-	InitSystem(&g_sys);
 
 	wndclass.style         = CS_HREDRAW | CS_VREDRAW;
 	wndclass.lpfnWndProc   = WndProc;
@@ -99,33 +96,48 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 LRESULT CALLBACK 
 WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
+	static PSYS                    psys;
 	static PROLE                   prole;
+	static PIMAGE                  pimage;
 
 	switch (message) {
 
 	case WM_CREATE:
 
-		prole = InitRole(g_hinst);
+		psys   = InitSystem();
+		prole  = InitRole(g_hinst);
+		pimage = InitImage(hwnd);
 
 		return 0;
 
 	case WM_PAINT:
 		
-		DrawRole(hwnd, prole);
+		DrawRole(hwnd, prole, pimage);
+		DrawImage(pimage, hwnd);
 
 		return 0;
 
 	case WM_KEYDOWN:
 
-		MoveRole(prole, wparam);
-
-		SendMessage(hwnd, WM_PAINT, 0, 0);
+		ControlRole(prole, wparam, hwnd, psys);
 
 		return 0;
 
+	case WM_TIMER:
+
+
+		return 0;
+
+	case WM_ERASEBKGND:
+
+		return TRUE;
+
 	case WM_DESTROY:
 
+		FreeSystem(psys);
 		FreeRole(prole);
+		FreeImage(pimage);
+
 		PostQuitMessage(0);
 
 		return 0;

@@ -15,14 +15,30 @@
 */
 #include "systc.h"
 
+PSYS
+InitSystem() {
+
+	PSYS _psys = (PSYS)malloc(sizeof(SYS));
+
+	_psys->m_cliHeight   = CLI_HEIGHT;
+	_psys->m_cliWidth    = CLI_WIDTH;
+	_psys->m_timerStatus = FALSE;
+
+	return _psys;
+
+}
+// 初始化结构体 SYSTEM
+
+
 STATUS
-InitSystem(PSYS _psys) {
+FreeSystem(PSYS _psys) {
 
 	assert(_psys != NULL);
 
-	_psys->m_cliHeight = CLI_HEIGHT;
-	_psys->m_cliWidth = CLI_WIDTH;
+	free(_psys);
+	_psys = NULL;
 
 	return OK;
 
 }
+// 释放SYS实例内存资源

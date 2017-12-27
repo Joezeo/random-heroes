@@ -27,6 +27,8 @@ extern "C" {
 +
 */
 #include "../SYS/systc.h"
+#include "../IMAGE/image.h"
+
 
 /*
 +
@@ -36,12 +38,14 @@ extern "C" {
 
 typedef struct {
 
-	HBITMAP m_hbmp;  // 角色的图像
-	UINT    m_status;// 角色移动状态（0，1，2分别代表行走，起跳，落下）
-	UINT    m_index; // 用于角色移动状态下，裁剪人物图像(0，1，2三种状态)
-	UINT    m_speed; // 角色移动速度
-	SIZE    m_size;  // 角色大小
-	POINT   m_pos;   // 角色位置
+	HBITMAP m_hbmp;        // 角色的图像
+	UINT    m_status;      // 角色移动状态（0，1，2分别代表行走，起跳，落下）
+	UINT    m_index;       // 用于角色移动状态下，裁剪人物图像(0，1，2三种状态)
+	UINT    m_speed;       // 角色移动速度
+	UINT    m_keyDownCnt;  // 按键次数，辅助改变角色的图像
+	SIZE    m_size;        // 角色大小
+	POINT   m_pos;         // 角色位置
+	RECT    m_rectClean;   // 调用InvalidateRect函数时，需要清屏的图像区域
 
 }ROLE, * PROLE;
 
@@ -60,15 +64,13 @@ FreeRole(PROLE);
 // 释放ROLE实例资源
 
 STATUS
-DrawRole(const HWND, const PROLE);
+DrawRole(const HWND, const PROLE, PIMAGE);
 // 画出角色
 
 STATUS
-ControlRole(PROLE, WPARAM);
+ControlRole(PROLE, WPARAM, HWND, PSYS);
+// 角色控制，移动跳跃
 
-STATUS
-MoveRole(PROLE, WPARAM);
-// 角色移动
 
 #ifdef __cplusplus
 }
