@@ -98,6 +98,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 LRESULT CALLBACK 
 WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
+	static PMAP                    pmap;
 	static PSYS                    psys;
 	static PROLE                   prole;
 	static PIMAGE                  pimage;
@@ -105,17 +106,21 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 	switch (message) {
 
 	case WM_CREATE:
-
+		
 		psys   = InitSystem();
 		prole  = InitRole(g_hinst);
 		pimage = InitImage(hwnd);
+		pmap   = InitMap(g_hinst, hwnd);
+
+		LoadMap(pmap, hwnd);
 
 		SetTimer(hwnd, ID_TIMER, 40, NULL);
 
 		break;
 
 	case WM_PAINT:
-		
+
+		DrawMap(pmap, pimage, hwnd);
 		DrawRole(hwnd, prole, pimage);
 		DrawImage(pimage, hwnd);
 
@@ -129,7 +134,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	case WM_KEYUP:
 
-		UnControlRole(prole, wparam);
+		UnControlRole(prole, wparam, hwnd);
 
 		break;
 
@@ -148,6 +153,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 		FreeSystem(psys);
 		FreeRole(prole);
 		FreeImage(pimage);
+		FreeMap(pmap);
 
 		KillTimer(hwnd, ID_TIMER);
 

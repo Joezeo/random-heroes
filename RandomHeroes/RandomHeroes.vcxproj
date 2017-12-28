@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -114,12 +114,14 @@
     <ClCompile Include="..\ENTRY\entry.c" />
     <ClCompile Include="..\FIGURE\roleifo.c" />
     <ClCompile Include="..\IMAGE\image.c" />
+    <ClCompile Include="..\MAP\mapifo.c" />
     <ClCompile Include="..\SYS\systc.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h" />
     <ClInclude Include="..\FIGURE\roleifo.h" />
     <ClInclude Include="..\IMAGE\image.h" />
+    <ClInclude Include="..\MAP\mapifo.h" />
     <ClInclude Include="..\SYS\systc.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -127,6 +129,8 @@
     <Image Include="..\RES\FIGURE\bandit-hd.bmp" />
     <Image Include="..\RES\FIGURE\bandit.bmp" />
     <Image Include="..\RES\ICON\Icon.ico" />
+    <Image Include="..\RES\MAP\chapter_1_return-hd.bmp" />
+    <Image Include="..\RES\MAP\chapter_1_thumb-hd.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RandomHeroes.rc" />

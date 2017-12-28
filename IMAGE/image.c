@@ -30,7 +30,9 @@ InitImage(HWND _hwnd) {
 
 	HDC _hdc = GetDC(_hwnd);
 
-	_pimage->m_memDc = CreateCompatibleDC(_hdc);
+	_pimage->m_memDc        = CreateCompatibleDC(_hdc);
+	_pimage->m_hBmp         = CreateCompatibleBitmap(_hdc, 3 * CLI_WIDTH, CLI_HEIGHT);
+	_pimage->m_drawLocation = 0;
 
 	ReleaseDC(_hwnd, _hdc);
 
@@ -44,6 +46,9 @@ STATUS
 FreeImage(PIMAGE _pimage) {
 
 	assert(_pimage != NULL);
+
+	DeleteObject(_pimage->m_hBmp);
+	DeleteDC(_pimage->m_memDc);
 
 	free(_pimage);
 	_pimage = NULL;
@@ -65,7 +70,7 @@ DrawImage(const PIMAGE _pimage, HWND _hwnd) {
 		0, 0,
 		CLI_WIDTH, CLI_HEIGHT,
 		_pimage->m_memDc,
-		0, 0,
+		_pimage->m_drawLocation, 0,
 		SRCCOPY);
 
 	ReleaseDC(_hwnd, _hdc);

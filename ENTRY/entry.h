@@ -27,9 +27,9 @@ extern "C" {
 +
 */
 #include "../SYS/systc.h"
-
 #include "../IMAGE/image.h"
 #include "../FIGURE/roleifo.h"
+#include "../MAP/mapifo.h"
 
 
 

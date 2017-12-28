@@ -36,7 +36,9 @@ extern "C" {
 */
 typedef struct {
 
+	HBITMAP m_hBmp;          // 内存兼容画布
 	HDC     m_memDc;         // 所有模块的图像都先绘入IMAGE实例的memDc中,再通过DrawImage画出
+	UINT    m_drawLocation;  // 画地图时的位置
 
 }IMAGE, * PIMAGE;
 

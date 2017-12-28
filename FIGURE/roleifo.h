@@ -48,8 +48,13 @@ typedef struct {
 	BOOL    m_mvDirection; // 角色移动方向，TRUE为向前，FALSE为向后
 	BOOL    m_highStatus;  // 跳跃后是否达到最大高度
 	BOOL    m_moveStatus;  // 角色是否处于正在移动状态
+	BOOL    m_fmapRefresh; // 角色是否达到地图刷新点(前方)
+	BOOL    m_bmapRefresh; // 角色是否达到地图刷新点(后方)
+	BOOL    m_fmapEnd;     // 地图是否达到尽头(前方)
+	BOOL    m_bmapEnd;     // 地图是否达到尽头(后方)
 	SIZE    m_size;        // 角色大小
 	POINT   m_pos;         // 角色位置
+	POINT   m_clientPos;   // 角色在客户区的坐标
 
 }ROLE, * PROLE;
 
@@ -76,7 +81,7 @@ ControlRole(PROLE, WPARAM, HWND, PSYS);
 // 角色控制，移动跳跃
 
 STATUS
-UnControlRole(PROLE, WPARAM);
+UnControlRole(PROLE, WPARAM, HWND);
 // 按键抬起，角色不受控制时的状态
 
 STATUS

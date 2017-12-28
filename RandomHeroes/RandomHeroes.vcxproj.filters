@@ -27,6 +27,9 @@
     <ClCompile Include="..\IMAGE\image.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\MAP\mapifo.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h">
@@ -44,6 +47,9 @@
     <ClInclude Include="..\IMAGE\image.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\MAP\mapifo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\RES\ICON\Icon.ico">
@@ -53,6 +59,12 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="..\RES\FIGURE\bandit.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="..\RES\MAP\chapter_1_thumb-hd.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="..\RES\MAP\chapter_1_return-hd.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
