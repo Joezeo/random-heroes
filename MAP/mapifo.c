@@ -6,7 +6,7 @@
 +
 -             修改时间：2017.12.28 / 15：40
 +
--             文件名称：
+-             文件名称：mapifo.c
 +
 -             模块：map模块，地图的编辑，加载，绘制
 +
@@ -21,6 +21,9 @@
 -			静态函数前向声明
 +
 */
+static STATUS
+__LoadFloor(HDC, HDC, HINSTANCE);
+// 地图加载地砖
 
 
 
@@ -66,7 +69,7 @@ FreeMap(PMAP _pmap) {
 
 
 STATUS
-LoadMap(PMAP _pmap, HWND _hwnd) {
+LoadMap(PMAP _pmap, HWND _hwnd, HINSTANCE _hins) {
 
 	assert(_pmap != NULL);
 	assert(_hwnd != NULL);
@@ -96,13 +99,15 @@ LoadMap(PMAP _pmap, HWND _hwnd) {
 
 		TransparentBlt(_pmap->m_memDc,
 			i * (CLI_WIDTH), 0,
-			CLI_WIDTH, CLI_HEIGHT,
+			CLI_WIDTH, CLI_HEIGHT - 32,
 			_tmpDc,
 			0, 0, // 源位置
 			_bmp.bmWidth, _bmp.bmHeight,
 			SRCCOPY);
 
 	}
+
+	__LoadFloor(_hdc, _pmap->m_memDc, _hins);
 
 	ReleaseDC(_hwnd, _hdc);
 	DeleteDC(_tmpDc);
@@ -147,8 +152,31 @@ DrawMap(PMAP _pmap, PIMAGE _pimage, HWND _hwnd) {
 }
 // 加载地图，从map实例绘入image实例
 
+
 /*
 +
 -			静态函数定义
 +
 */
+static STATUS
+__LoadFloor(HDC _hdc, HDC _memDc, HINSTANCE _hins) {
+
+	HBITMAP _total = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_ITEMS_SHEETS));
+	HDC     _tmpDc = CreateCompatibleDC(_hdc);
+
+	SelectObject(_tmpDc, _total);
+
+	for (int i = 0; i < 60; i++) {
+		
+		BitBlt(_memDc,
+			i * 32, CLI_HEIGHT - 32,
+			32, 32,
+			_tmpDc,
+			0, 0,
+			SRCCOPY);
+
+	}
+	return OK;
+
+}
+// 地图加载地砖

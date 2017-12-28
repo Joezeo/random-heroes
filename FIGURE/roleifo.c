@@ -83,10 +83,12 @@ InitRole(HINSTANCE _hins) {
 	_prole->m_size.cy = _bmp.bmHeight / 3;
 
 	_prole->m_pos.x = 0;
-	_prole->m_pos.y = CLI_HEIGHT - _prole->m_size.cy;
+	_prole->m_pos.y = CLI_HEIGHT - _prole->m_size.cy - 30;
 
 	_prole->m_clientPos.x = 0;
 	_prole->m_clientPos.y = CLI_HEIGHT - _prole->m_size.cy;
+
+	_prole->m_weapon = InitWeapon(_hins, WEAPON_9MM);
 
 	return _prole;
 
@@ -98,6 +100,8 @@ STATUS
 FreeRole(PROLE _prole) {
 
 	assert(_prole != NULL);
+
+	FreeWeapon(_prole->m_weapon);
 
 	free(_prole);
 
@@ -160,6 +164,8 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 		(_prole->m_size.cy)*(_prole->m_status), // ÊúÏò²Ã¼ô
 		_prole->m_size.cx, _prole->m_size.cy,
 		RGB(255, 255, 255));
+
+	DrawWeapon(_prole->m_weapon, _winDc, _pimage->m_memDc, _prole->m_pos);
 
 	ReleaseDC(_hwnd, _winDc);
 	DeleteDC(_tmpDc);

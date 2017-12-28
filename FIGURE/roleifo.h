@@ -28,6 +28,7 @@ extern "C" {
 */
 #include "../SYS/systc.h"
 #include "../IMAGE/image.h"
+#include "./WEAPON/weapon.h"
 
 
 /*
@@ -35,7 +36,6 @@ extern "C" {
 -			结构体定义
 +
 */
-
 typedef struct {
 
 	HBITMAP m_hbmp;        // 角色的图像
@@ -55,6 +55,8 @@ typedef struct {
 	SIZE    m_size;        // 角色大小
 	POINT   m_pos;         // 角色在整个地图的位置
 	POINT   m_clientPos;   // 角色在客户区的坐标
+
+	PWEAPON m_weapon;      // 角色的武器
 
 }ROLE, * PROLE;
 

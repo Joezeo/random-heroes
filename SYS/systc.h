@@ -41,9 +41,10 @@ extern "C" {
 +
 */
 
-#define CLI_HEIGHT 384		// 客户区高度
-#define CLI_WIDTH  640		// 客户区宽度
-#define ID_TIMER   1        // TIMER计时器ID
+#define CLI_HEIGHT         384		// 客户区高度
+#define CLI_WIDTH          640		// 客户区宽度
+#define ID_TIMER           1        // TIMER计时器ID
+#define TYPE_CNT_OF_WEAPON 14       // 武器种类数
 
 // 状态码定义
 #define OK         1

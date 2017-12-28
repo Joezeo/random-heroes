@@ -57,7 +57,7 @@ FreeMap(PMAP);
 // 释放MAP实例内存资源
 
 STATUS
-LoadMap(PMAP, HWND);
+LoadMap(PMAP, HWND, HINSTANCE);
 // 编辑地图存入MAP实例的memDc中
 
 STATUS

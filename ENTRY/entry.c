@@ -112,7 +112,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 		pimage = InitImage(hwnd);
 		pmap   = InitMap(g_hinst, hwnd);
 
-		LoadMap(pmap, hwnd);
+		LoadMap(pmap, hwnd,  g_hinst);
 
 		SetTimer(hwnd, ID_TIMER, 20, NULL);
 
