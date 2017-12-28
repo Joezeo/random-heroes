@@ -122,10 +122,10 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 	// 如果角色到达了地图刷新处，并且没有越界更新_pimage的m_drawLocation属性
 	// 地图位置向前移动
 	if (_prole->m_fmapRefresh && _pimage->m_drawLocation < 2 * CLI_WIDTH
-		&& _prole->m_moveStatus == TRUE)
+		&& _prole->m_moveStatus)
 		_pimage->m_drawLocation += _prole->m_speed;
 	if (_prole->m_bmapRefresh && _pimage->m_drawLocation > 0
-		&& _prole->m_moveStatus == TRUE)
+		&& _prole->m_moveStatus)
 		_pimage->m_drawLocation -= _prole->m_speed;
 
 
@@ -171,11 +171,10 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 
 
 STATUS
-ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd, PSYS _psys) {
+ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 
 	assert(_prole != NULL);
 	assert(_hwnd != NULL);
-	assert(_psys != NULL);
 
 	if(_prole->m_highStatus == 0)
 		_prole->m_keyDownCnt++;

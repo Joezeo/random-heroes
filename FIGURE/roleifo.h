@@ -77,7 +77,7 @@ DrawRole(const HWND, const PROLE, PIMAGE);
 // 画出角色
 
 STATUS
-ControlRole(PROLE, WPARAM, HWND, PSYS);
+ControlRole(PROLE, WPARAM, HWND);
 // 角色控制，移动跳跃
 
 STATUS

@@ -128,7 +128,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	case WM_KEYDOWN:
 
-		ControlRole(prole, wparam, hwnd, psys);
+		ControlRole(prole, wparam, hwnd);
 
 		break;
 

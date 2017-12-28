@@ -22,7 +22,6 @@ InitSystem() {
 
 	_psys->m_cliHeight   = CLI_HEIGHT;
 	_psys->m_cliWidth    = CLI_WIDTH;
-	_psys->m_timerStatus = FALSE;
 
 	return _psys;
 

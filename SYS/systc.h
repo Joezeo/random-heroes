@@ -62,7 +62,6 @@ typedef struct {
 
 	UINT    m_cliHeight;
 	UINT    m_cliWidth;
-	BOOL    m_timerStatus;
 
 }SYSTEM, SYS, *PSYS;
 
