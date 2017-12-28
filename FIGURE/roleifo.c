@@ -117,21 +117,31 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 	HDC               _winDc;
 	HDC               _tmpDc;
 
-	// 如果角色到达了地图刷新处，更新_pimage的地图的m_drawLocation属性
+	/*------------------------------------------------------------------------------*/
+
+	// 如果角色到达了地图刷新处，并且没有越界更新_pimage的m_drawLocation属性
 	// 地图位置向前移动
-	if (_prole->m_fmapRefresh && _pimage->m_drawLocation < 2 * CLI_WIDTH)
+	if (_prole->m_fmapRefresh && _pimage->m_drawLocation < 2 * CLI_WIDTH
+		&& _prole->m_moveStatus == TRUE)
 		_pimage->m_drawLocation += _prole->m_speed;
+	if (_prole->m_bmapRefresh && _pimage->m_drawLocation > 0
+		&& _prole->m_moveStatus == TRUE)
+		_pimage->m_drawLocation -= _prole->m_speed;
+
+
+	// 如果地图达到前方边界，m_fmapEnd = TRUE
 	if (_pimage->m_drawLocation == 2 * CLI_WIDTH)
 		_prole->m_fmapEnd = TRUE;
 	else
 		_prole->m_fmapEnd = FALSE;
 
-	if (_prole->m_bmapRefresh && _pimage->m_drawLocation > 0)
-		_pimage->m_drawLocation -= _prole->m_speed;
+	// 如果地图达到后方边界，m_bmapEnd = TRUE
 	if(_pimage->m_drawLocation == 0)
 		_prole->m_bmapEnd = TRUE;
 	else
 		_prole->m_bmapEnd = FALSE;
+
+	/*------------------------------------------------------------------------------*/
 
 
 	_winDc = GetDC(_hwnd);
@@ -254,9 +264,11 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 		if (_prole->m_mvDirection)
 			_prole->m_mvDirection = FALSE;
 
+		// 如果角色向后走，并且达到了前方地图刷新点，则转换其为FALSE
 		if (_prole->m_fmapRefresh)
 			_prole->m_fmapRefresh = FALSE;
 
+		// 到达后地图刷新点的条件
 		if (_prole->m_clientPos.x <= CLI_WIDTH / 4) {
 
 			_prole->m_bmapRefresh = TRUE;
@@ -293,9 +305,11 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 		if (!(_prole->m_mvDirection))
 			_prole->m_mvDirection = TRUE;
 
+		// 如果角色向前走，并且达到了后方地图刷新点，则转换其为FALSE
 		if (_prole->m_bmapRefresh)
 			_prole->m_bmapRefresh = FALSE;
 
+		// 到达前地图刷新点的条件
 		if (_prole->m_clientPos.x >= CLI_WIDTH / 4 * 3) {
 
 			_prole->m_fmapRefresh = TRUE;
@@ -313,9 +327,6 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 				_prole->m_clientPos.x += _prole->m_speed;
 
 		}
-
-		
-			
 
 		InvalidateRect(_hwnd, NULL, TRUE);
 
@@ -424,10 +435,30 @@ __MoveInertia(PROLE _prole) {
 
 	}
 
-	if (_prole->m_mvDirection)
+	if (_prole->m_mvDirection 
+		&& _prole->m_pos.x <= 3 * CLI_WIDTH - _prole->m_size.cx) {
+
 		_prole->m_pos.x += _prole->m_speed;
-	else
+
+		// 如果角色没到达地图刷新点，或者地图到达前方方尽头，并且m_clientPos.x < CLI_WIDTH
+		// 这时才改变角色的客户区坐标
+		if (!(_prole->m_fmapRefresh)
+			|| (_prole->m_clientPos.x < CLI_WIDTH && _prole->m_fmapEnd))
+			_prole->m_clientPos.x += _prole->m_speed;
+
+	}	
+	else if (!(_prole->m_mvDirection)
+		&& _prole->m_pos.x > 0) {
+
 		_prole->m_pos.x -= _prole->m_speed;
+
+		// 如果角色没到达地图刷新点，或者地图到达后方尽头，并且m_clientPos.x > 0
+		// 这时才改变角色的客户区坐标
+		if (!(_prole->m_bmapRefresh)
+			|| (_prole->m_clientPos.x > 0 && _prole->m_bmapEnd))
+			_prole->m_clientPos.x -= _prole->m_speed;
+	}
+		
 
 	return OK;
 

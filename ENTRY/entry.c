@@ -114,7 +114,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 		LoadMap(pmap, hwnd);
 
-		SetTimer(hwnd, ID_TIMER, 40, NULL);
+		SetTimer(hwnd, ID_TIMER, 20, NULL);
 
 		break;
 

@@ -53,7 +53,7 @@ typedef struct {
 	BOOL    m_fmapEnd;     // 地图是否达到尽头(前方)
 	BOOL    m_bmapEnd;     // 地图是否达到尽头(后方)
 	SIZE    m_size;        // 角色大小
-	POINT   m_pos;         // 角色位置
+	POINT   m_pos;         // 角色在整个地图的位置
 	POINT   m_clientPos;   // 角色在客户区的坐标
 
 }ROLE, * PROLE;
