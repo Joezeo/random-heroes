@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.27 / 15：21
 +
--             修改时间：2017.12.27 / 15：21
+-             修改时间：2017.12.28 / 14：08
 +
 -             文件名称：roleifo.c
 +
@@ -24,7 +24,7 @@
 
 static STATUS
 __moveRole(PROLE, WPARAM, HWND);
-// 角色移动,跳跃
+// 按键控制角色移动,跳跃
 
 static STATUS
 __JumpRole(PROLE);
@@ -37,6 +37,14 @@ __HighRole(PROLE);
 static STATUS
 __FallRole(PROLE);
 // 判断角色跳跃完成
+
+static STATUS
+__MoveInertia(PROLE);
+// 如果角色跳跃之前处于正在移动状态则产生向前的惯性移动
+
+static STATUS
+__RoleMvStatusChange(PROLE, WPARAM);
+// 按键抬起时，改变角色的移动状态
 
 
 /*
@@ -55,14 +63,16 @@ InitRole(HINSTANCE _hins) {
 
 	BITMAP            _bmp;
 
-	_prole->m_hbmp       = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_REAL_ROLE_BAN));
-	_prole->m_status     = 0;
-	_prole->m_index      = 0;
-	_prole->m_speed      = 5;
-	_prole->m_keyDownCnt = 0;
-	_prole->m_maxHeight  = 15;
-	_prole->m_curHeight  = 0;
-	_prole->m_highStatus = FALSE;
+	_prole->m_hbmp        = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_REAL_ROLE_BAN));
+	_prole->m_status      = 0;
+	_prole->m_index       = 0;
+	_prole->m_speed       = 5;
+	_prole->m_keyDownCnt  = 0;
+	_prole->m_maxHeight   = 15;
+	_prole->m_curHeight   = 0;
+	_prole->m_highStatus  = FALSE;
+	_prole->m_moveStatus  = FALSE;
+	_prole->m_mvDirection = TRUE;
 	
 	GetObject(_prole->m_hbmp, sizeof(BITMAP), &_bmp);
 	_prole->m_size.cx = (_bmp.bmWidth) / 3;
@@ -70,11 +80,6 @@ InitRole(HINSTANCE _hins) {
 
 	_prole->m_pos.x = 0;
 	_prole->m_pos.y = CLI_HEIGHT - _prole->m_size.cy;
-
-	_prole->m_rectClean.left   = _prole->m_pos.x;
-	_prole->m_rectClean.top    = _prole->m_pos.y;
-	_prole->m_rectClean.right  = _prole->m_rectClean.left + _prole->m_size.cx;
-	_prole->m_rectClean.bottom = _prole->m_rectClean.top + _prole->m_size.cy;
 
 	return _prole;
 
@@ -141,7 +146,8 @@ ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd, PSYS _psys) {
 	assert(_hwnd != NULL);
 	assert(_psys != NULL);
 
-	_prole->m_keyDownCnt++;
+	if(_prole->m_highStatus == 0)
+		_prole->m_keyDownCnt++;
 
 	__moveRole(_prole, _wParam, _hwnd);
 
@@ -150,6 +156,18 @@ ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd, PSYS _psys) {
 }
 // 角色控制，移动跳跃
 
+
+STATUS
+UnControlRole(PROLE _prole, WPARAM _wParam) {
+
+	assert(_prole != NULL);
+
+	__RoleMvStatusChange(_prole, _wParam);
+
+	return OK;
+
+}
+// 按键抬起，角色不受控制时的状态
 
 
 STATUS
@@ -161,19 +179,21 @@ RoleJumpProc(PROLE _prole, HWND _hwnd) {
 	if (_prole->m_status == 0)
 		return OK;
 
-	// 跳跃后没有达到最大高度
-	if (!(_prole->m_highStatus)) {
+	__MoveInertia(_prole);
 
-		if (_prole->m_curHeight < 5)
+	// 跳跃后没有达到最大高度
+	if (!(_prole->m_highStatus) && _prole->m_status == 2) {
+
+		if (_prole->m_curHeight < 2)
 			_prole->m_index = 0;
 		else
 			_prole->m_index = 1;
 
-		_prole->m_pos.y++;
-		_prole->m_curHeight++;
+		_prole->m_pos.y -= 10;
+		_prole->m_curHeight += 1;
 
 	}
-	else if (_prole->m_curHeight == _prole->m_maxHeight) {
+	if (_prole->m_curHeight == _prole->m_maxHeight && _prole->m_status == 2) {
 
 		__HighRole(_prole);
 
@@ -184,7 +204,7 @@ RoleJumpProc(PROLE _prole, HWND _hwnd) {
 
 	}
 
-	InvalidateRect(_hwnd, NULL, FALSE);
+	InvalidateRect(_hwnd, NULL, TRUE);
 
 	return OK;
 
@@ -205,7 +225,14 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 
 	switch (_wParam) {
 
-	case VK_LEFT:
+	case VK_LEFT: // 左为向后走
+
+		if (_prole->m_status != 0)
+			break;
+		if (!(_prole->m_moveStatus))
+			_prole->m_moveStatus = TRUE;
+		if (_prole->m_mvDirection)
+			_prole->m_mvDirection = FALSE;
 
 		_prole->m_pos.x -= _prole->m_speed;
 
@@ -213,7 +240,14 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 
 		break;
 
-	case VK_RIGHT:
+	case VK_RIGHT: // 右为向前走
+
+		if (_prole->m_status != 0)
+			break;
+		if (!(_prole->m_moveStatus))
+			_prole->m_moveStatus = TRUE;
+		if (!(_prole->m_mvDirection))
+			_prole->m_mvDirection = TRUE;
 
 		_prole->m_pos.x += _prole->m_speed;
 
@@ -230,7 +264,7 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 
 	}
 
-	if (_prole->m_keyDownCnt == 5 && _prole->m_status == 0) {
+	if (_prole->m_keyDownCnt >= 5 && _prole->m_status == 0) {
 
 		_prole->m_index++;
 		_prole->m_keyDownCnt = 0;
@@ -246,7 +280,7 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 	return OK;
 
 }
-// 角色移动
+// 按键控制角色移动,跳跃
 
 static STATUS
 __JumpRole(PROLE _prole) {
@@ -259,7 +293,7 @@ __JumpRole(PROLE _prole) {
 	return OK;
 
 }
-// 角色跳跃开始，设立定时器
+// 角色跳跃开始
 
 static STATUS
 __HighRole(PROLE _prole) {
@@ -268,6 +302,7 @@ __HighRole(PROLE _prole) {
 
 	_prole->m_index      = 2;
 	_prole->m_highStatus = TRUE;
+	_prole->m_status = 1;
 	
 	return OK;
 
@@ -278,29 +313,75 @@ static STATUS
 __FallRole(PROLE _prole) {
 
 	assert(_prole != NULL);
-	
-	if(_prole->m_status != 1) // 转换角色为落下状态
-		_prole->m_status = 1;
 
-	if (_prole->m_curHeight > 5)
+	if (_prole->m_curHeight > 3)
 		_prole->m_index = 0;
-	else if (_prole->m_curHeight > 3)
+	else if (_prole->m_curHeight > 2)
 		_prole->m_index = 1;
 	else
 		_prole->m_index = 2;
 
-	_prole->m_pos.y--;
-	_prole->m_curHeight--;
+	_prole->m_pos.y += 10;
+	_prole->m_curHeight -= 1;
 
 	if (_prole->m_curHeight == 0) {
 
 		_prole->m_status     = 0;
 		_prole->m_index      = 0;
 		_prole->m_highStatus = FALSE;
+		_prole->m_moveStatus = FALSE;
 
 	}
 
 	return OK;
 
 }
-// 判断角色跳跃完成，关闭定时器
+// 判断角色跳跃完成
+
+static STATUS
+__MoveInertia(PROLE _prole) {
+
+	assert(_prole != NULL);
+
+	if (!(_prole->m_moveStatus)) {
+
+		return OK;
+
+	}
+
+	if (_prole->m_mvDirection)
+		_prole->m_pos.x += _prole->m_speed;
+	else
+		_prole->m_pos.x -= _prole->m_speed;
+
+	return OK;
+
+}
+// 如果角色跳跃之前处于正在移动状态则产生向前的惯性移动
+
+static STATUS
+__RoleMvStatusChange(PROLE _prole, WPARAM _wparam) {
+
+	assert(_prole != NULL);
+
+	if (_prole->m_status != 0)
+		return OK;
+
+	switch (_wparam) {
+
+	case VK_LEFT:
+
+		// 此处没有 break;
+
+	case VK_RIGHT:
+
+		_prole->m_moveStatus = FALSE;
+
+		break;
+
+	}
+
+	return OK;
+
+}
+// 按键抬起时，改变角色的移动状态

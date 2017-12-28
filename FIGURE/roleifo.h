@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.27 / 15：21
 +
--             修改时间：2017.12.27 / 15：21
+-             修改时间：2017.12.28 / 14：08
 +
 -             文件名称：roleifo.h
 +
@@ -39,16 +39,17 @@ extern "C" {
 typedef struct {
 
 	HBITMAP m_hbmp;        // 角色的图像
-	UINT    m_status;      // 角色移动状态（0，1，2分别代表行走，落下，起跳）
-	UINT    m_index;       // 用于角色移动状态下，裁剪人物图像(0，1，2三种状态)
-	UINT    m_speed;       // 角色移动速度
-	UINT    m_keyDownCnt;  // 按键次数，辅助改变角色的图像
-	UINT    m_maxHeight;   // 角色最大跳跃高度
-	UINT    m_curHeight;   // 角色当前跳跃高度
+	SHORT   m_status;      // 角色移动状态（0，1，2分别代表行走，落下，起跳）
+	SHORT   m_index;       // 用于角色移动状态下，裁剪人物图像(0，1，2三种状态)
+	SHORT   m_speed;       // 角色移动速度
+	SHORT   m_keyDownCnt;  // 按键次数，辅助改变角色的图像
+	SHORT   m_maxHeight;   // 角色最大跳跃高度
+	SHORT   m_curHeight;   // 角色当前跳跃高度
+	BOOL    m_mvDirection; // 角色移动方向，TRUE为向前，FALSE为向后
 	BOOL    m_highStatus;  // 跳跃后是否达到最大高度
+	BOOL    m_moveStatus;  // 角色是否处于正在移动状态
 	SIZE    m_size;        // 角色大小
 	POINT   m_pos;         // 角色位置
-	RECT    m_rectClean;   // 调用InvalidateRect函数时，需要清屏的图像区域
 
 }ROLE, * PROLE;
 
@@ -75,8 +76,14 @@ ControlRole(PROLE, WPARAM, HWND, PSYS);
 // 角色控制，移动跳跃
 
 STATUS
+UnControlRole(PROLE, WPARAM);
+// 按键抬起，角色不受控制时的状态
+
+STATUS
 RoleJumpProc(PROLE, HWND);
 // 角色跳跃过程，此函数由Timer计时器控制
+
+
 
 
 #ifdef __cplusplus

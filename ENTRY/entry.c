@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.27 / 12：54
 +
--             修改时间：2017.12.27 / 12：54
+-             修改时间：2017.12.28 / 14：08
 +
 -             文件名称：entry.c
 +
@@ -63,17 +63,17 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 		FALSE);
 
 	hwnd = CreateWindow(
-		szWndClassName,		            //windows class name
-		TEXT("Random Heroes"),			//windows caption	
-		WS_OVERLAPPEDWINDOW,            //windows style
-		CW_USEDEFAULT,		            //intial x position
-		CW_USEDEFAULT,		            //intial y position
-		rect.right - rect.left,		    //intial x size
-		rect.bottom - rect.top,		    //intial y size
-		NULL,				            //parent wnidow handle
-		NULL,				            //window menu handle
-		hInstance,			            //program instance handle
-		NULL);				            //creation paramenter
+		szWndClassName,		                  //windows class name
+		TEXT("Random Heroes"),			      //windows caption	
+		WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX,    //windows style
+		CW_USEDEFAULT,		                  //intial x position
+		CW_USEDEFAULT,		                  //intial y position
+		rect.right - rect.left,		          //intial x size
+		rect.bottom - rect.top,		          //intial y size
+		NULL,				                  //parent wnidow handle
+		NULL,				                  //window menu handle
+		hInstance,			                  //program instance handle
+		NULL);				                  //creation paramenter
 
 	ShowWindow(hwnd, nShowCmd);
 	UpdateWindow(hwnd);
@@ -110,28 +110,34 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 		prole  = InitRole(g_hinst);
 		pimage = InitImage(hwnd);
 
-		SetTimer(hwnd, ID_TIMER, 100, NULL);
+		SetTimer(hwnd, ID_TIMER, 40, NULL);
 
-		return 0;
+		break;
 
 	case WM_PAINT:
 		
 		DrawRole(hwnd, prole, pimage);
 		DrawImage(pimage, hwnd);
 
-		return 0;
+		break;
 
 	case WM_KEYDOWN:
 
 		ControlRole(prole, wparam, hwnd, psys);
 
-		return 0;
+		break;
+
+	case WM_KEYUP:
+
+		UnControlRole(prole, wparam);
+
+		break;
 
 	case WM_TIMER:
 
 		RoleJumpProc(prole, hwnd);
 
-		return 0;
+		break;
 
 	case WM_ERASEBKGND:
 
@@ -147,7 +153,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 		PostQuitMessage(0);
 
-		return 0;
+		break;
 
 	}
 
