@@ -33,6 +33,9 @@
     <ClCompile Include="..\FIGURE\WEAPON\weapon.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\EFFECT\effect.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h">
@@ -56,6 +59,9 @@
     <ClInclude Include="..\FIGURE\WEAPON\weapon.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\EFFECT\effect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\RES\ICON\Icon.ico">
@@ -77,6 +83,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="..\RES\WEAPON\weapon_icon_9mm.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="..\RES\EFFECT\projectiles.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

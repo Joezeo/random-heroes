@@ -30,6 +30,7 @@ extern "C" {
 
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <windows.h>
 #include "../RandomHeroes/resource.h"
 

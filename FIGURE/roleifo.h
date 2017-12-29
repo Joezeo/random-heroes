@@ -29,6 +29,7 @@ extern "C" {
 #include "../SYS/systc.h"
 #include "../IMAGE/image.h"
 #include "./WEAPON/weapon.h"
+#include "../EFFECT/effect.h"
 
 
 /*
