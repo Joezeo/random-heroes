@@ -42,8 +42,8 @@ InitMap(HINSTANCE _hins, HWND _hwnd) {
 
 	HDC _hdc = GetDC(_hwnd);
 
-	_pmap->m_hbmp[0]  = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_CHAPTER_1));
-	_pmap->m_hbmp[1]  = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_CHAPTER_1_RETURN));
+	_pmap->m_hbmp_forward[0]  = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_CHAPTER_1));
+	_pmap->m_hbmp_forward[1]  = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_CHAPTER_1_RETURN));
 	_pmap->m_memDc = CreateCompatibleDC(_hdc);
 
 	ReleaseDC(_hwnd, _hdc);
@@ -86,7 +86,7 @@ LoadMap(PMAP _pmap, HWND _hwnd, HINSTANCE _hins) {
 
 	SelectObject(_pmap->m_memDc, _tmpHbmp);
 
-	GetObject(_pmap->m_hbmp[0], sizeof(BITMAP), &_bmp);
+	GetObject(_pmap->m_hbmp_forward[0], sizeof(BITMAP), &_bmp);
 
 	for (int i = 0; i < 3; i++) {
 
@@ -95,7 +95,7 @@ LoadMap(PMAP _pmap, HWND _hwnd, HINSTANCE _hins) {
 		else
 			_index = 0;
 
-		SelectObject(_tmpDc, _pmap->m_hbmp[_index]);
+		SelectObject(_tmpDc, _pmap->m_hbmp_forward[_index]);
 
 		TransparentBlt(_pmap->m_memDc,
 			i * (CLI_WIDTH), 0,
@@ -134,7 +134,7 @@ DrawMap(PMAP _pmap, PIMAGE _pimage, HWND _hwnd) {
 
 	SelectObject(_pimage->m_memDc, _pimage->m_hBmp);
 
-	SelectObject(_tmpDc, _pmap->m_hbmp);
+	SelectObject(_tmpDc, _pmap->m_hbmp_forward);
 
 	BitBlt(_pimage->m_memDc,
 		0, 0,

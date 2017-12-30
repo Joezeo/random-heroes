@@ -8,14 +8,18 @@
 #define IDB_CHAPTER_1                   107
 #define IDB_CHAPTER_1_RETURN            108
 #define IDB_ITEMS_SHEETS                109
-#define IDB_WEAPON_9MM                  110
 #define IDB_EFFECTS                     113
+#define IDB_FIGURE_BAN_RETURN           114
+
+// ÎäÆ÷Í¼Æ¬×ÊÔ´µÄID
+#define IDB_WEAPON_9MM                  200
+#define IDB_WEAPON_RETURN_9MM           201
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        114
+#define _APS_NEXT_RESOURCE_VALUE        116
 #define _APS_NEXT_COMMAND_VALUE         40003
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101

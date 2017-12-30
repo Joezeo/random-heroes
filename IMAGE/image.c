@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.27 / 22：33
 +
--             修改时间：2017.12.27 / 22：33
+-             修改时间：2017.12.30 / 16：16
 +
 -             文件名称：image.c
 +
@@ -33,6 +33,8 @@ InitImage(HWND _hwnd) {
 	_pimage->m_memDc        = CreateCompatibleDC(_hdc);
 	_pimage->m_hBmp         = CreateCompatibleBitmap(_hdc, 3 * CLI_WIDTH, CLI_HEIGHT);
 	_pimage->m_drawLocation = 0;
+
+	SelectObject(_pimage->m_memDc, _pimage->m_hBmp);
 
 	ReleaseDC(_hwnd, _hdc);
 

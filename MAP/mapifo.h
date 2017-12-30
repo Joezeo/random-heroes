@@ -37,7 +37,7 @@ extern "C" {
 */
 typedef struct {
 
-	HBITMAP       m_hbmp[2];    // 地图源Bmp图像
+	HBITMAP       m_hbmp_forward[2];    // 地图源Bmp图像
 	HDC	          m_memDc;		// 地图整体绘制完毕放入memDc中，在通过DrawMap绘入Image模块
 
 }MAP, * PMAP;

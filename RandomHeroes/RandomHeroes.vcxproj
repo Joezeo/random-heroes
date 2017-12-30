@@ -133,11 +133,13 @@
     <Image Include="..\RES\EFFECT\projectiles.bmp" />
     <Image Include="..\RES\FIGURE\bandit-hd.bmp" />
     <Image Include="..\RES\FIGURE\bandit.bmp" />
+    <Image Include="..\RES\FIGURE\bandit_return.bmp" />
     <Image Include="..\RES\ICON\Icon.ico" />
     <Image Include="..\RES\MAP\chapter_1_return-hd.bmp" />
     <Image Include="..\RES\MAP\chapter_1_thumb-hd.bmp" />
     <Image Include="..\RES\MAP\tile_sheet.bmp" />
     <Image Include="..\RES\WEAPON\weapon_icon_9mm.bmp" />
+    <Image Include="..\RES\WEAPON\weapon_icon_9mm_return.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RandomHeroes.rc" />

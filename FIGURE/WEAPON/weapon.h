@@ -28,6 +28,20 @@ extern "C" {
 */
 #include "../../SYS/systc.h"
 
+/*
++
+-			宏定义
++
+*/
+// 角色向前走时，武器图像相对于角色图像的偏移量
+#define FORWARD_WEAPON_X_OFFSET 10
+#define FORWARD_WEAPON_Y_OFFSET 7
+
+// 角色向后走时，武器图像相对于角色图像的偏移量
+#define BACKWARD_WEAPON_X_OFFSET -41
+#define BACKWARD_WEAPON_Y_OFFSER 7
+
+
 
 /*
 +
@@ -36,13 +50,15 @@ extern "C" {
 */
 typedef enum {
 
-	WEAPON_9MM = 110,
+	WEAPON_9MM        = 200,
+	WEAPON_9MM_RETURN = 201,
 
 }WEAPON_TYPE;
 
 typedef struct {
 
-	HBITMAP     m_weaponHbmp;
+	HBITMAP     m_weaponHbmp_forward;
+	HBITMAP     m_weaponHbmp_backward;
 
 }WEAPON, * PWEAPON;
 
@@ -60,7 +76,7 @@ FreeWeapon(PWEAPON);
 // 释放武器内存资源
 
 STATUS
-DrawWeapon(PWEAPON, HDC, HDC, POINT);
+DrawWeapon(PWEAPON, HDC, HDC, POINT, BOOL);
 // 根据角色所在位置画出武器
 
 

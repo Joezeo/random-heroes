@@ -23,7 +23,8 @@ InitWeapon(HINSTANCE _hins, WEAPON_TYPE _type) {
 	if (!_pweapon)
 		exit(OVERFLOW);
 
-	_pweapon->m_weaponHbmp = LoadBitmap(_hins, MAKEINTRESOURCE(_type));
+	_pweapon->m_weaponHbmp_forward  = LoadBitmap(_hins, MAKEINTRESOURCE(_type));
+	_pweapon->m_weaponHbmp_backward = LoadBitmap(_hins, MAKEINTRESOURCE(_type + 1));
 
 	return _pweapon;
 
@@ -46,7 +47,8 @@ FreeWeapon(PWEAPON _pweapon) {
 
 
 STATUS
-DrawWeapon(PWEAPON _pweapon, HDC _hdc, HDC _memDc, POINT _rolePos) {
+DrawWeapon(PWEAPON _pweapon, HDC _hdc, HDC _memDc,
+	POINT _rolePos, BOOL _mvDirection) {
 
 	assert(_pweapon != NULL);
 	assert(_hdc != NULL);
@@ -54,14 +56,31 @@ DrawWeapon(PWEAPON _pweapon, HDC _hdc, HDC _memDc, POINT _rolePos) {
 
 	HDC            _tmpDc;
 	BITMAP         _bmp;
+	POINT          _weaponPos;
 
 	_tmpDc = CreateCompatibleDC(_hdc);
-	GetObject(_pweapon->m_weaponHbmp, sizeof(BITMAP), &_bmp);
 
-	SelectObject(_tmpDc, _pweapon->m_weaponHbmp);
+	if (_mvDirection) {
+
+		_weaponPos.x = _rolePos.x + FORWARD_WEAPON_X_OFFSET;
+		_weaponPos.y = _rolePos.y + FORWARD_WEAPON_Y_OFFSET;
+
+		SelectObject(_tmpDc, _pweapon->m_weaponHbmp_forward);
+
+	}
+	else {
+
+		_weaponPos.x = _rolePos.x + BACKWARD_WEAPON_X_OFFSET;
+		_weaponPos.y = _rolePos.y + BACKWARD_WEAPON_Y_OFFSER;
+
+		SelectObject(_tmpDc, _pweapon->m_weaponHbmp_backward);
+
+	}
+
+	GetObject(_pweapon->m_weaponHbmp_forward, sizeof(BITMAP), &_bmp);
 
 	TransparentBlt(_memDc,
-		_rolePos.x + 10, _rolePos.y + 7,
+		_weaponPos.x, _weaponPos.y,
 		_bmp.bmWidth, _bmp.bmHeight,
 		_tmpDc,
 		0, 0,

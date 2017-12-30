@@ -83,6 +83,18 @@ __mapBoundaryDetermine_Image(PROLE, PIMAGE);
 // 角色客户区坐标在__moveRole时确定
 
 
+/*---------------------------------------------------------------------*/
+// 在角色向前/向后走时，画出不同的图像，相关静态函数
+
+static STATUS
+__drawRole_walkFoward(const PROLE, PIMAGE, HDC);
+// 角色向前走/跳跃时的图像
+
+static STATUS
+__drawRole_walkBackwards(const PROLE, PIMAGE, HDC);
+// 角色向后走/跳跃时的图像
+
+
 
 
 
@@ -103,7 +115,8 @@ InitRole(HINSTANCE _hins) {
 
 	BITMAP            _bmp;
 
-	_prole->m_hbmp        = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_REAL_ROLE_BAN));
+	_prole->m_hbmp_forward   = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_REAL_ROLE_BAN));
+	_prole->m_hbmp_backward  = LoadBitmap(_hins, MAKEINTRESOURCE(IDB_FIGURE_BAN_RETURN));
 	_prole->m_status      = 0;
 	_prole->m_index       = 0;
 	_prole->m_speed       = 5;
@@ -118,7 +131,7 @@ InitRole(HINSTANCE _hins) {
 	_prole->m_fmapEnd     = FALSE;
 	_prole->m_bmapEnd     = TRUE;
 	
-	GetObject(_prole->m_hbmp, sizeof(BITMAP), &_bmp);
+	GetObject(_prole->m_hbmp_forward, sizeof(BITMAP), &_bmp);
 	_prole->m_size.cx = (_bmp.bmWidth) / 3;
 	_prole->m_size.cy = _bmp.bmHeight / 3;
 
@@ -159,7 +172,7 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 	assert(_pimage != NULL);
 
 	HDC               _hdc;
-	HDC               _tmpDc;
+	_hdc    = GetDC(_hwnd);
 
 	/*------------------------------------------------------------------------------*/
 
@@ -168,36 +181,27 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 
 	/*------------------------------------------------------------------------------*/
 
+	// 画角色 //
+	if (_prole->m_mvDirection)
+		// 如果向前走，画出向前走的图像
+		__drawRole_walkFoward(_prole, _pimage, _hdc);
+	else
+		// 如果向后走，画出向后走的图像
+		__drawRole_walkBackwards(_prole, _pimage, _hdc);
 
-	_hdc = GetDC(_hwnd);
-
-	_tmpDc = CreateCompatibleDC(_hdc);
-
-	SelectObject(_pimage->m_memDc, _pimage->m_hBmp);
-
-	SelectObject(_tmpDc, _prole->m_hbmp);
-
-	TransparentBlt(_pimage->m_memDc,
-		_prole->m_pos.x, _prole->m_pos.y,
-		_prole->m_size.cx, _prole->m_size.cy,
-		_tmpDc,
-		(_prole->m_size.cx)*(_prole->m_index),	// 横向裁剪
-		(_prole->m_size.cy)*(_prole->m_status), // 竖向裁剪
-		_prole->m_size.cx, _prole->m_size.cy,
-		RGB(255, 255, 255));
 
 	/*------------------------------------------------------------------------------*/
 
-	// 画出武器
-	DrawWeapon(_prole->m_weapon, _hdc, _pimage->m_memDc, _prole->m_pos);
+	// 画出武器 //
+	DrawWeapon(_prole->m_weapon, _hdc, _pimage->m_memDc,
+		_prole->m_pos, _prole->m_mvDirection);
 
-	// 画出特效
+	// 画出特效 //
 	// DrawEffect(_hdc, _pimage->m_memDc, _prole->m_pos, 1);
 
 	/*------------------------------------------------------------------------------*/
 
 	ReleaseDC(_hwnd, _hdc);
-	DeleteDC(_tmpDc);
 
 	return OK;
 
@@ -211,7 +215,7 @@ ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 	assert(_prole != NULL);
 	assert(_hwnd != NULL);
 
-	if(_prole->m_highStatus == 0)
+	if(_prole->m_moveStatus)
 		_prole->m_keyDownCnt++;
 
 	__moveRole(_prole, _wParam, _hwnd);
@@ -269,7 +273,6 @@ RoleJumpProc(PROLE _prole, HWND _hwnd) {
 
 }
 // 角色跳跃过程，此函数由Timer计时器控制
-
 
 
 
@@ -619,3 +622,62 @@ __mapBoundaryDetermine_Image(PROLE _prole, PIMAGE _pimage) {
 // 而m_f(b)mapEnd可以辅助确定角色的客户区坐标m_clientPos
 // 角色客户区坐标与地图刷新密切相关
 // 角色客户区坐标在__moveRole时确定
+
+
+/*---------------------------------------------------------------------*/
+// 在角色向前/向后走时，画出不同的图像，相关静态函数
+
+static STATUS
+__drawRole_walkFoward(const PROLE _prole, PIMAGE _pimage, HDC _hdc) {
+
+	assert(_prole != NULL);
+	assert(_pimage != NULL);
+	assert(_hdc != NULL);
+
+	HDC           _tmpDc = CreateCompatibleDC(_hdc);
+
+	SelectObject(_tmpDc, _prole->m_hbmp_forward);
+
+	TransparentBlt(_pimage->m_memDc,
+		_prole->m_pos.x, _prole->m_pos.y,
+		_prole->m_size.cx, _prole->m_size.cy,
+		_tmpDc,
+		(_prole->m_size.cx)*(_prole->m_index),	// 横向裁剪
+		(_prole->m_size.cy)*(_prole->m_status), // 竖向裁剪
+		_prole->m_size.cx, _prole->m_size.cy,
+		RGB(255, 255, 255));
+
+	DeleteDC(_tmpDc);
+
+	return OK;
+
+}
+// 角色向前走时的图像
+
+
+static STATUS
+__drawRole_walkBackwards(const PROLE _prole, PIMAGE _pimage, HDC _hdc) {
+
+	assert(_prole != NULL);
+	assert(_pimage != NULL);
+	assert(_hdc != NULL);
+
+	HDC         _tmpDc = CreateCompatibleDC(_hdc);
+
+	SelectObject(_tmpDc, _prole->m_hbmp_backward);
+
+	TransparentBlt(_pimage->m_memDc,
+		_prole->m_pos.x, _prole->m_pos.y,
+		_prole->m_size.cx, _prole->m_size.cy,
+		_tmpDc,
+		(_prole->m_size.cx)*(2 - _prole->m_index),	// 横向裁剪
+		(_prole->m_size.cy)*(_prole->m_status),     // 竖向裁剪
+		_prole->m_size.cx, _prole->m_size.cy,
+		RGB(255, 255, 255));
+
+	DeleteDC(_tmpDc);
+
+	return OK;
+
+}
+// 角色向后走/跳跃时的图像
