@@ -76,7 +76,7 @@ FreeRole(PROLECFG);
 
 STATUS
 DrawRole(const HWND, const PROLECFG, PIMAGE);
-// 画出角色
+// 画出角色，角色武器，角色相关特效
 
 STATUS
 ControlRole(PROLECFG, WPARAM, HWND);

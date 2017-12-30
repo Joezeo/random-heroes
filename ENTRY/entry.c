@@ -100,7 +100,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	static PMAP                    pmap;
 	static PSYS                    psys;
-	static PROLECFG                   prole;
+	static PROLECFG                prole;
 	static PIMAGE                  pimage;
 
 	switch (message) {

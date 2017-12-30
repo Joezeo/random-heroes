@@ -204,7 +204,7 @@ DrawRole(const HWND _hwnd, const PROLECFG _prole, PIMAGE _pimage) {
 	return OK;
 
 }
-// 画出角色
+// 画出角色，角色武器，角色相关特效
 
 
 STATUS
