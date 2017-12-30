@@ -6,15 +6,15 @@
 +
 -             修改时间：2017.12.28 / 14：08
 +
--             文件名称：roleifo.h
+-             文件名称：rolecfg.h
 +
--             模块：role模块，关于游戏角色的模块，包括角色的控制，绘制，状态等
+-             模块：role.config模块，关于游戏角色的控制模块，包括角色的控制，绘制，状态等
 +
--             功能：role模块头文件，包括结构体定义，头文件包含，函数前向声明，宏定义
+-             功能：role.config模块头文件，包括结构体定义，头文件包含，函数前向声明，宏定义
 +
 */
-#ifndef __ROLE_IFO_H__
-#define __ROLE_IFO_H__
+#ifndef __ROLE_CFG_H__
+#define __ROLE_CFG_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,6 +30,7 @@ extern "C" {
 #include "../IMAGE/image.h"
 #include "./WEAPON/weapon.h"
 #include "../EFFECT/effect.h"
+#include "./INFO/roleifo.h"
 
 /*
 +
@@ -57,9 +58,7 @@ typedef struct {
 	POINT   m_pos;            // 角色在整个地图的位置
 	POINT   m_clientPos;      // 角色在客户区的坐标
 
-	PWEAPON m_weapon;      // 角色的武器
-
-}ROLE, * PROLE;
+}ROLE_CONFIG, * PROLECFG;
 
 /*
 +
@@ -67,28 +66,28 @@ typedef struct {
 +
 */
 
-PROLE
+PROLECFG
 InitRole(HINSTANCE);
 // 初始化ROLE结构体实例
 
 STATUS
-FreeRole(PROLE);
+FreeRole(PROLECFG);
 // 释放ROLE实例资源
 
 STATUS
-DrawRole(const HWND, const PROLE, PIMAGE);
+DrawRole(const HWND, const PROLECFG, PIMAGE);
 // 画出角色
 
 STATUS
-ControlRole(PROLE, WPARAM, HWND);
+ControlRole(PROLECFG, WPARAM, HWND);
 // 角色控制，移动跳跃
 
 STATUS
-UnControlRole(PROLE, WPARAM, HWND);
+UnControlRole(PROLECFG, WPARAM, HWND);
 // 按键抬起，角色不受控制时的状态
 
 STATUS
-RoleJumpProc(PROLE, HWND);
+RoleJumpProc(PROLECFG, HWND);
 // 角色跳跃过程，此函数由Timer计时器控制
 
 
@@ -98,4 +97,4 @@ RoleJumpProc(PROLE, HWND);
 }
 #endif
 
-#endif // __ROLE_IFO_H__ //
+#endif // __ROLE_CFG_H__ //

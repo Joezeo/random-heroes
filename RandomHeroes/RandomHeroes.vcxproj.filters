@@ -18,9 +18,6 @@
     <ClCompile Include="..\ENTRY\entry.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\FIGURE\roleifo.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\SYS\systc.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -36,15 +33,18 @@
     <ClCompile Include="..\EFFECT\effect.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\FIGURE\rolecfg.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FIGURE\INFO\roleifo.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\FIGURE\roleifo.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\SYS\systc.h">
@@ -60,6 +60,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\EFFECT\effect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FIGURE\rolecfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FIGURE\INFO\roleifo.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

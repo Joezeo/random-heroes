@@ -68,7 +68,7 @@ typedef struct {
 +
 */
 PWEAPON
-InitWeapon(HINSTANCE, WEAPON_TYPE);
+LoadWeapon(HINSTANCE, WEAPON_TYPE);
 // ³õÊ¼»¯WEAPONÊµÀý
 
 STATUS

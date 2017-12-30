@@ -6,15 +6,15 @@
 +
 -             修改时间：2017.12.30 / 14：48
 +
--             文件名称：roleifo.c
+-             文件名称：rolecfg.c
 +
--             模块：role模块，关于游戏角色的模块，包括角色的控制，绘制，状态等
+-             模块：role.config模块，关于游戏角色的控制模块，包括角色的控制，绘制，状态等
 +
--             功能：role模块源文件，包括函数定义
+-             功能：role.config模块源文件，包括函数定义
 +
 */
 
-#include "roleifo.h"
+#include "rolecfg.h"
 
 /*
 +
@@ -26,19 +26,19 @@
 // 按键上左右控制角色移动相关静态函数
 
 static STATUS
-__moveRole(PROLE, WPARAM, HWND);
+__moveRole(PROLECFG, WPARAM, HWND);
 // 按键控制角色移动,跳跃
 
 static STATUS
-__moveRole_left(PROLE);
+__moveRole_left(PROLECFG);
 // 按下方向键左，向后移动
 
 static STATUS
-__moveRole_right(PROLE);
+__moveRole_right(PROLECFG);
 // 按下方向键右，向前移动
 
 static STATUS
-__moveRole_up(PROLE);
+__moveRole_up(PROLECFG);
 // 按下方向键上，改变角色移动状态为跳跃，计时器开始处理RoleJumpProc
 
 
@@ -46,19 +46,19 @@ __moveRole_up(PROLE);
 // 角色跳跃相关静态函数
 
 static STATUS
-__jumpRole(PROLE);
+__jumpRole(PROLECFG);
 // 角色跳跃开始
 
 static STATUS
-__highRole(PROLE);
+__highRole(PROLECFG);
 // 角色跳跃处于最高处的状态
 
 static STATUS
-__fallRole(PROLE);
+__fallRole(PROLECFG);
 // 判断角色跳跃完成
 
 static STATUS
-__moveInertia(PROLE);
+__moveInertia(PROLECFG);
 // 如果角色跳跃之前处于正在移动状态则产生向前的惯性移动
 
 
@@ -66,7 +66,7 @@ __moveInertia(PROLE);
 // 按键抬起相关静态函数
 
 static STATUS
-__roleMvStatusChange(PROLE, WPARAM, HWND);
+__roleMvStatusChange(PROLECFG, WPARAM, HWND);
 // 按键抬起时，改变角色的移动状态
 
 
@@ -74,10 +74,10 @@ __roleMvStatusChange(PROLE, WPARAM, HWND);
 // 前进/后退时，地图刷新相关静态函数
 
 static STATUS
-__mapBoundaryDetermine_Image(PROLE, PIMAGE);
+__mapBoundaryDetermine_Image(PROLECFG, PIMAGE);
 // 地图边界判定，主要修改IMAGE模块的m_DrawLocation属性
 // DrawLoaction决定了在客户区画出地图的起始位置，从而达到地图刷新的效果
-// 以及通过判断DrawLocation属性来修改PROLE实例的m_f(b)mapEnd值
+// 以及通过判断DrawLocation属性来修改PROLECFG实例的m_f(b)mapEnd值
 // 而m_f(b)mapEnd可以辅助确定角色的客户区坐标m_clientPos
 // 角色客户区坐标与地图刷新密切相关
 // 角色客户区坐标在__moveRole时确定
@@ -87,11 +87,11 @@ __mapBoundaryDetermine_Image(PROLE, PIMAGE);
 // 在角色向前/向后走时，画出不同的图像，相关静态函数
 
 static STATUS
-__drawRole_walkFoward(const PROLE, PIMAGE, HDC);
+__drawRole_walkFoward(const PROLECFG, PIMAGE, HDC);
 // 角色向前走/跳跃时的图像
 
 static STATUS
-__drawRole_walkBackwards(const PROLE, PIMAGE, HDC);
+__drawRole_walkBackwards(const PROLECFG, PIMAGE, HDC);
 // 角色向后走/跳跃时的图像
 
 
@@ -105,10 +105,10 @@ __drawRole_walkBackwards(const PROLE, PIMAGE, HDC);
 +
 */
 
-PROLE
+PROLECFG
 InitRole(HINSTANCE _hins) {
 
-	PROLE _prole = (PROLE)malloc(sizeof(ROLE));
+	PROLECFG _prole = (PROLECFG)malloc(sizeof(ROLE_CONFIG));
 
 	if (!_prole)
 		exit(OVERFLOW);
@@ -141,8 +141,6 @@ InitRole(HINSTANCE _hins) {
 	_prole->m_clientPos.x = 0;
 	_prole->m_clientPos.y = CLI_HEIGHT - _prole->m_size.cy;
 
-	_prole->m_weapon = InitWeapon(_hins, WEAPON_9MM);
-
 	return _prole;
 
 }
@@ -150,13 +148,13 @@ InitRole(HINSTANCE _hins) {
 
 
 STATUS
-FreeRole(PROLE _prole) {
+FreeRole(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
-	FreeWeapon(_prole->m_weapon);
-
 	free(_prole);
+
+	free(ROLE_INFO);
 
 	return OK;
 
@@ -165,7 +163,7 @@ FreeRole(PROLE _prole) {
 
 
 STATUS
-DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
+DrawRole(const HWND _hwnd, const PROLECFG _prole, PIMAGE _pimage) {
 
 	assert(_hwnd != NULL);
 	assert(_prole != NULL);
@@ -193,7 +191,7 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 	/*------------------------------------------------------------------------------*/
 
 	// 画出武器 //
-	DrawWeapon(_prole->m_weapon, _hdc, _pimage->m_memDc,
+	DrawWeapon(ROLE_INFO->m_weapon, _hdc, _pimage->m_memDc,
 		_prole->m_pos, _prole->m_mvDirection);
 
 	// 画出特效 //
@@ -210,7 +208,7 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 
 
 STATUS
-ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
+ControlRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 
 	assert(_prole != NULL);
 	assert(_hwnd != NULL);
@@ -227,7 +225,7 @@ ControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 
 
 STATUS
-UnControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
+UnControlRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 
 	assert(_prole != NULL);
 
@@ -240,7 +238,7 @@ UnControlRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 
 
 STATUS
-RoleJumpProc(PROLE _prole, HWND _hwnd) {
+RoleJumpProc(PROLECFG _prole, HWND _hwnd) {
 
 	assert(_prole != NULL);
 	assert(_hwnd != NULL);
@@ -288,7 +286,7 @@ RoleJumpProc(PROLE _prole, HWND _hwnd) {
 // 按键上左右控制角色移动相关静态函数
 
 static STATUS
-__moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
+__moveRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 
 	assert(_prole != NULL);
 
@@ -335,7 +333,7 @@ __moveRole(PROLE _prole, WPARAM _wParam, HWND _hwnd) {
 // 按键控制角色移动,跳跃
 
 static STATUS
-__moveRole_left(PROLE _prole) {
+__moveRole_left(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
@@ -380,7 +378,7 @@ __moveRole_left(PROLE _prole) {
 // 按下方向键左，向后移动
 
 static STATUS
-__moveRole_right(PROLE _prole) {
+__moveRole_right(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
@@ -425,7 +423,7 @@ __moveRole_right(PROLE _prole) {
 // 按下方向键右，向前移动
 
 static STATUS
-__moveRole_up(PROLE _prole) {
+__moveRole_up(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
@@ -446,7 +444,7 @@ __moveRole_up(PROLE _prole) {
 // 角色跳跃相关静态函数 
 
 static STATUS
-__jumpRole(PROLE _prole) {
+__jumpRole(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
@@ -464,7 +462,7 @@ __jumpRole(PROLE _prole) {
 // 角色跳跃开始
 
 static STATUS
-__highRole(PROLE _prole) {
+__highRole(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
@@ -478,7 +476,7 @@ __highRole(PROLE _prole) {
 // 角色跳跃处于最高处的状态
 
 static STATUS
-__fallRole(PROLE _prole) {
+__fallRole(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
@@ -507,7 +505,7 @@ __fallRole(PROLE _prole) {
 // 判断角色跳跃完成
 
 static STATUS
-__moveInertia(PROLE _prole) {
+__moveInertia(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
@@ -552,7 +550,7 @@ __moveInertia(PROLE _prole) {
 // 按键抬起相关静态函数
 
 static STATUS
-__roleMvStatusChange(PROLE _prole, WPARAM _wparam, HWND _hwnd) {
+__roleMvStatusChange(PROLECFG _prole, WPARAM _wparam, HWND _hwnd) {
 
 	assert(_prole != NULL);
 
@@ -586,7 +584,7 @@ __roleMvStatusChange(PROLE _prole, WPARAM _wparam, HWND _hwnd) {
 // 前进/后退时，地图刷新相关静态函数
 
 static STATUS
-__mapBoundaryDetermine_Image(PROLE _prole, PIMAGE _pimage) {
+__mapBoundaryDetermine_Image(PROLECFG _prole, PIMAGE _pimage) {
 
 	assert(_prole != NULL);
 	assert(_pimage != NULL);
@@ -618,7 +616,7 @@ __mapBoundaryDetermine_Image(PROLE _prole, PIMAGE _pimage) {
 }
 // 地图边界判定，主要修改IMAGE模块的m_DrawLocation属性
 // DrawLoaction决定了在客户区画出地图的起始位置，从而达到地图刷新的效果
-// 以及通过判断DrawLocation属性来修改PROLE实例的m_f(b)mapEnd值
+// 以及通过判断DrawLocation属性来修改PROLECFG实例的m_f(b)mapEnd值
 // 而m_f(b)mapEnd可以辅助确定角色的客户区坐标m_clientPos
 // 角色客户区坐标与地图刷新密切相关
 // 角色客户区坐标在__moveRole时确定
@@ -628,7 +626,7 @@ __mapBoundaryDetermine_Image(PROLE _prole, PIMAGE _pimage) {
 // 在角色向前/向后走时，画出不同的图像，相关静态函数
 
 static STATUS
-__drawRole_walkFoward(const PROLE _prole, PIMAGE _pimage, HDC _hdc) {
+__drawRole_walkFoward(const PROLECFG _prole, PIMAGE _pimage, HDC _hdc) {
 
 	assert(_prole != NULL);
 	assert(_pimage != NULL);
@@ -656,7 +654,7 @@ __drawRole_walkFoward(const PROLE _prole, PIMAGE _pimage, HDC _hdc) {
 
 
 static STATUS
-__drawRole_walkBackwards(const PROLE _prole, PIMAGE _pimage, HDC _hdc) {
+__drawRole_walkBackwards(const PROLECFG _prole, PIMAGE _pimage, HDC _hdc) {
 
 	assert(_prole != NULL);
 	assert(_pimage != NULL);

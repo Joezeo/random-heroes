@@ -113,7 +113,8 @@
   <ItemGroup>
     <ClCompile Include="..\EFFECT\effect.c" />
     <ClCompile Include="..\ENTRY\entry.c" />
-    <ClCompile Include="..\FIGURE\roleifo.c" />
+    <ClCompile Include="..\FIGURE\INFO\roleifo.c" />
+    <ClCompile Include="..\FIGURE\rolecfg.c" />
     <ClCompile Include="..\FIGURE\WEAPON\weapon.c" />
     <ClCompile Include="..\IMAGE\image.c" />
     <ClCompile Include="..\MAP\mapifo.c" />
@@ -122,7 +123,8 @@
   <ItemGroup>
     <ClInclude Include="..\EFFECT\effect.h" />
     <ClInclude Include="..\ENTRY\entry.h" />
-    <ClInclude Include="..\FIGURE\roleifo.h" />
+    <ClInclude Include="..\FIGURE\INFO\roleifo.h" />
+    <ClInclude Include="..\FIGURE\rolecfg.h" />
     <ClInclude Include="..\FIGURE\WEAPON\weapon.h" />
     <ClInclude Include="..\IMAGE\image.h" />
     <ClInclude Include="..\MAP\mapifo.h" />

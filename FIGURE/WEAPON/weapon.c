@@ -17,7 +17,7 @@
 #include "weapon.h"
 
 PWEAPON
-InitWeapon(HINSTANCE _hins, WEAPON_TYPE _type) {
+LoadWeapon(HINSTANCE _hins, WEAPON_TYPE _type) {
 
 	PWEAPON _pweapon = (PWEAPON)malloc(sizeof(WEAPON));
 	if (!_pweapon)
