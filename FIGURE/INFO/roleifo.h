@@ -62,6 +62,10 @@ LoadRoleInfo();
 // 初始化角色的信息
 
 STATUS
+UpdateRoleWeaponIfo(WEAPON_TYPE);
+// 更新角色武器信息及图片
+
+STATUS
 FreeRoleInfo(PROLEIFO);
 // 释放PROLEIFO占用的内存资源
 

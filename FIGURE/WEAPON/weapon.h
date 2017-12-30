@@ -76,6 +76,10 @@ FreeWeapon(PWEAPON);
 // 释放武器内存资源
 
 STATUS
+UpdateWeapon(HINSTANCE, PWEAPON, WEAPON_TYPE);
+// 更新武器的图片
+
+STATUS
 DrawWeapon(PWEAPON, HDC, HDC, POINT, BOOL);
 // 根据角色所在位置画出武器
 

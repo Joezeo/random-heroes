@@ -29,13 +29,22 @@ LoadRoleInfo() {
 	if (!_proleifo)
 		exit(OVERFLOW);
 
-	_proleifo->m_weaponType = WEAPON_9MM;
+	_proleifo->m_weaponType = (WEAPON_TYPE)200;
 	_proleifo->m_weapon = LoadWeapon(g_hinst, _proleifo->m_weaponType);
 
 	return _proleifo;
 
 }
 // 初始化角色的信息
+
+
+STATUS
+UpdateRoleWeaponIfo(WEAPON_TYPE _type) {
+
+	return OK;
+
+}
+// 更新角色武器信息及图片
 
 
 STATUS

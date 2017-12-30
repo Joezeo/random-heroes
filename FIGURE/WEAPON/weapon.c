@@ -47,6 +47,20 @@ FreeWeapon(PWEAPON _pweapon) {
 
 
 STATUS
+UpdateWeapon(HINSTANCE _hins, PWEAPON _pweapon, WEAPON_TYPE _type) {
+
+	assert(_pweapon != NULL);
+
+	_pweapon->m_weaponHbmp_forward = LoadBitmap(_hins, MAKEINTRESOURCE(_type));
+	_pweapon->m_weaponHbmp_backward = LoadBitmap(_hins, MAKEINTRESOURCE(_type + 1));
+
+	return OK;
+
+}
+// ¸üÐÂÎäÆ÷µÄÍ¼Æ¬
+
+
+STATUS
 DrawWeapon(PWEAPON _pweapon, HDC _hdc, HDC _memDc,
 	POINT _rolePos, BOOL _mvDirection) {
 
