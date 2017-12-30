@@ -15,6 +15,12 @@
 */
 #include "systc.h"
 
+/*
++
+-			єЇКэ¶ЁТе
++
+*/
+
 PSYS
 InitSystem() {
 

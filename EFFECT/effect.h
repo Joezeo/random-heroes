@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.29 / 17：34
 +
--             修改时间：2017.12.29 / 17：34
+-             修改时间：2017.12.30 / 14：47
 +
 -             文件名称：effect.h
 +
@@ -70,7 +70,16 @@ typedef struct {
 */
 PCAPEFF
 InitCoordSize();
-// CAPTURE_EFFECT回调函数，用于特效图片截取坐标，尺寸加载
+// 用于特效图片截取坐标，尺寸加载
+// 从EFFECT目录下的effct文件中读取数据
+
+STATUS
+FreeCapEffct(PCAPEFF);
+// 释放PCAPEFF内存资源
+
+STATUS
+DrawEffect(HDC, HDC, const POINT, const UINT);
+// 根据传入的位置，特效id，画出特效
 
 #ifdef __cplusplus
 }

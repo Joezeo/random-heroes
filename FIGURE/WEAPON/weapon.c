@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.28 / 22：26
 +
--             修改时间：2017.12.28 / 22：26
+-             修改时间：2017.12.30 / 14：45
 +
 -             文件名称：weapon.c
 +
@@ -73,4 +73,4 @@ DrawWeapon(PWEAPON _pweapon, HDC _hdc, HDC _memDc, POINT _rolePos) {
 	return OK;
 
 }
-// 画出武器部分
+// 根据角色所在位置画出武器

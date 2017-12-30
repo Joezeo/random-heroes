@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.27 / 15：21
 +
--             修改时间：2017.12.29 / 16：20
+-             修改时间：2017.12.30 / 14：48
 +
 -             文件名称：roleifo.c
 +
@@ -161,8 +161,6 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 	HDC               _hdc;
 	HDC               _tmpDc;
 
-	PCAPEFF _cap = InitCoordSize();
-
 	/*------------------------------------------------------------------------------*/
 
 	// 地图刷新功能 //
@@ -193,15 +191,8 @@ DrawRole(const HWND _hwnd, const PROLE _prole, PIMAGE _pimage) {
 	// 画出武器
 	DrawWeapon(_prole->m_weapon, _hdc, _pimage->m_memDc, _prole->m_pos);
 
-	SelectObject(_tmpDc, ALL_EFFECTS);
-
-	/*BitBlt(_pimage->m_memDc,
-		0, 0,
-		(EFF_SIZE + 1)->cx, (EFF_SIZE + 1)->cy,
-		_tmpDc,
-		(EFF_POS + 1)->x, (EFF_POS + 1)->y,
-		SRCCOPY
-	);*/
+	// 画出特效
+	// DrawEffect(_hdc, _pimage->m_memDc, _prole->m_pos, 1);
 
 	/*------------------------------------------------------------------------------*/
 

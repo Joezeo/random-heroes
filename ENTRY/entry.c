@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.27 / 12：54
 +
--             修改时间：2017.12.28 / 14：08
+-             修改时间：2017.12.30 / 15：50
 +
 -             文件名称：entry.c
 +
@@ -154,6 +154,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 		FreeRole(prole);
 		FreeImage(pimage);
 		FreeMap(pmap);
+		FreeCapEffct(P_CAP_EFFECT);
 
 		KillTimer(hwnd, ID_TIMER);
 

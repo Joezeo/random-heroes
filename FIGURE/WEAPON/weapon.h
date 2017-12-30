@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.28 / 22：26
 +
--             修改时间：2017.12.28 / 22：26
+-             修改时间：2017.12.30 / 14：46
 +
 -             文件名称：weapon.h
 +
@@ -61,7 +61,7 @@ FreeWeapon(PWEAPON);
 
 STATUS
 DrawWeapon(PWEAPON, HDC, HDC, POINT);
-// 画出武器部分
+// 根据角色所在位置画出武器
 
 
 #ifdef __cplusplus
