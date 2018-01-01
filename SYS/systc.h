@@ -34,6 +34,7 @@ extern "C" {
 #include <windows.h>
 #include "../RandomHeroes/resource.h"
 
+extern HINSTANCE             g_hinst;
 
 
 /*

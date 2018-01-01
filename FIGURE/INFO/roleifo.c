@@ -39,7 +39,13 @@ LoadRoleInfo() {
 
 
 STATUS
-UpdateRoleWeaponIfo(WEAPON_TYPE _type) {
+UpdateRoleWeaponIfo(PROLEIFO _proleifo, WEAPON_TYPE _type) {
+
+	assert(_proleifo != NULL);
+
+	_proleifo->m_weaponType = _type;
+
+	UpdateWeapon(g_hinst, _proleifo->m_weapon, _type);
 
 	return OK;
 
@@ -51,6 +57,8 @@ STATUS
 FreeRoleInfo(PROLEIFO _proleifo) {
 
 	assert(_proleifo != NULL);
+
+	FreeWeapon(_proleifo->m_weapon);
 
 	free(_proleifo);
 	_proleifo = NULL;

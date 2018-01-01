@@ -29,16 +29,6 @@ extern "C" {
 #include "../../SYS/systc.h"
 #include "../WEAPON/weapon.h"
 
-extern HINSTANCE                 g_hinst;
-
-/*
-+
--			宏定义
-+
-*/
-// 暂时用常量保存角色游戏性的信息，之后改为本地保存
-#define ROLE_INFO LoadRoleInfo()
-
 
 /*
 +
@@ -62,7 +52,7 @@ LoadRoleInfo();
 // 初始化角色的信息
 
 STATUS
-UpdateRoleWeaponIfo(WEAPON_TYPE);
+UpdateRoleWeaponIfo(PROLEIFO, WEAPON_TYPE);
 // 更新角色武器信息及图片
 
 STATUS

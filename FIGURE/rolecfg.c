@@ -141,6 +141,8 @@ InitRole(HINSTANCE _hins) {
 	_prole->m_clientPos.x = 0;
 	_prole->m_clientPos.y = CLI_HEIGHT - _prole->m_size.cy;
 
+	_prole->m_roleifo = LoadRoleInfo();
+
 	return _prole;
 
 }
@@ -152,9 +154,9 @@ FreeRole(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
-	free(_prole);
+	free(_prole->m_roleifo);
 
-	free(ROLE_INFO);
+	free(_prole);
 
 	return OK;
 
@@ -191,7 +193,7 @@ DrawRole(const HWND _hwnd, const PROLECFG _prole, PIMAGE _pimage) {
 	/*------------------------------------------------------------------------------*/
 
 	// 画出武器 //
-	DrawWeapon(ROLE_INFO->m_weapon, _hdc, _pimage->m_memDc,
+	DrawWeapon(_prole->m_roleifo->m_weapon, _hdc, _pimage->m_memDc,
 		_prole->m_pos, _prole->m_mvDirection);
 
 	// 画出特效 //

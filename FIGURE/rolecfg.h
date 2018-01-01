@@ -28,7 +28,6 @@ extern "C" {
 */
 #include "../SYS/systc.h"
 #include "../IMAGE/image.h"
-#include "./WEAPON/weapon.h"
 #include "../EFFECT/effect.h"
 #include "./INFO/roleifo.h"
 
@@ -57,6 +56,8 @@ typedef struct {
 	SIZE    m_size;           // 角色大小
 	POINT   m_pos;            // 角色在整个地图的位置
 	POINT   m_clientPos;      // 角色在客户区的坐标
+
+	PROLEIFO m_roleifo;       // 角色游戏性信息（武器，等级，角色，金钱，背包等等）
 
 }ROLE_CONFIG, * PROLECFG;
 

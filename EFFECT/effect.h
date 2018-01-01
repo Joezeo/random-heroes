@@ -35,7 +35,6 @@ extern "C" {
 -			∫Í∂®“Â
 +
 */
-extern HINSTANCE                 g_hinst;
 
 // HBITMAP
 #define ALL_EFFECTS LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_EFFECTS))
