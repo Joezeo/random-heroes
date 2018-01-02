@@ -165,7 +165,7 @@ BulletsTimerProc(PBULLETS _pbullets) {
 	_rec = __checkBulletsPos(_pbullets);
 
 	// 如果_rec!=NULL 释放该结点内存资源 //
-	if (!_rec) {
+	if (_rec != NULL) {
 
 		__freeBullet(_pbullets, _rec);
 
@@ -271,9 +271,7 @@ static STATUS
 __freeBullet(PBULLETS _pbullets, PBULLET _pbullet) {
 
 	assert(_pbullets != NULL);
-
-	if (_pbullet == NULL)
-		return OK;
+	assert(_pbullet != NULL);
 
 	if (_pbullets->m_head == _pbullets->m_tail) {
 
