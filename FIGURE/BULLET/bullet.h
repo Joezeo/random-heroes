@@ -37,6 +37,8 @@ extern "C" {
 +
 */
 #define BULLET_SPEED 10;
+#define BULLET_INITIAL_POS_OFFSET_X  10 + 30
+#define BULLET_INITIAL_POS_OFFSET_Y  7  + 5
 
 
 /*
@@ -78,6 +80,10 @@ InitBulletslk();
 // 初始化子弹链表
 
 STATUS
+FreeBulletslk(PBULLETS);
+// 释放子弹链表，以及所有子弹结点的内存资源
+
+STATUS
 AddBullet(PBULLETS, POINT);
 // 往子弹链表中添加一个子弹
 
@@ -86,7 +92,7 @@ DrawBullets(const PBULLETS, HDC, HDC);
 // 画出子弹链表中的子弹
 
 STATUS
-BulletsTimerProc(const PBULLETS);
+BulletsTimerProc(PBULLETS);
 // 关于子弹的计时器进程函数（包括画出子弹位置刷新，位置判定等）
 
 #ifdef __cplusplus

@@ -22,13 +22,33 @@
 +
 */
 static PBULLET
-CreateBullet(POINT);
+__createBullet(POINT);
 // 静态函数，生成一个子弹结点
 
 
 static BOOL
-EmptyBullets(const PBULLETS);
+__emptyBullets(const PBULLETS);
 // 判断子弹链表是否为空
+
+
+static STATUS
+__changeBullets_Pos_Distance(PBULLETS);
+// 改变子弹的位置，飞行距离
+
+
+static PBULLET
+__checkBulletsPos(const PBULLETS);
+// 检查子弹位置，如果存在已经达到最大飞行距离的子弹，则返回这个子弹结点的位置
+
+
+static STATUS
+__freeBullet(PBULLETS, PBULLET);
+// 静态函数，释放此地址的子弹结点的内存资源
+
+
+
+
+
 
 /*
 +
@@ -56,13 +76,24 @@ InitBulletslk() {
 
 
 STATUS
+FreeBulletslk(PBULLETS _pbullets) {
+
+	assert(_pbullets != NULL);
+
+	return OK;
+
+}
+// 释放子弹链表，以及所有子弹结点的内存资源
+
+
+STATUS
 AddBullet(PBULLETS _pbullets, POINT _pos) {
 
 	assert(_pbullets != NULL);
 
-	PBULLET _newBullet = CreateBullet(_pos);
+	PBULLET _newBullet = __createBullet(_pos);
 
-	if (EmptyBullets(_pbullets)) {
+	if (__emptyBullets(_pbullets)) {
 
 		_pbullets->m_head = _newBullet;
 		_pbullets->m_tail = _newBullet;
@@ -97,14 +128,19 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 	assert(_hdc != NULL);
 	assert(_memDc != NULL);
 
-	PBULLET _tmp   = _pbullets->m_head;
-
-	if (EmptyBullets(_pbullets))
+	if (__emptyBullets(_pbullets))
 		return OK;
+	
+	PBULLET _tmp = _pbullets->m_head;
 
+	POINT   _initialPos;
+	
 	while (_tmp != NULL) {
 
-		DrawEffect(_hdc, _memDc, _tmp->m_pos, 7);
+		_initialPos.x = _tmp->m_pos.x + BULLET_INITIAL_POS_OFFSET_X;
+		_initialPos.y = _tmp->m_pos.y + BULLET_INITIAL_POS_OFFSET_Y;
+
+		DrawEffect(_hdc, _memDc, _initialPos, 7);
 		_tmp = _tmp->m_next;
 
 	}
@@ -116,16 +152,22 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 
 
 STATUS
-BulletsTimerProc(const PBULLETS _pbullets) {
+BulletsTimerProc(PBULLETS _pbullets) {
 
 	assert(_pbullets != NULL);
 
-	PBULLET _tmp = _pbullets->m_head;
+	PBULLET _rec = NULL;
 
-	while (_tmp != NULL) {
+	// 改变子弹的位置，飞行距离 //
+	__changeBullets_Pos_Distance(_pbullets);
 
-		_tmp->m_pos.x += _pbullets->m_speed;
-		_tmp = _tmp->m_next;
+	// 检查子弹位置 //
+	_rec = __checkBulletsPos(_pbullets);
+
+	// 如果_rec!=NULL 释放该结点内存资源 //
+	if (!_rec) {
+
+		__freeBullet(_pbullets, _rec);
 
 	}
 
@@ -134,6 +176,10 @@ BulletsTimerProc(const PBULLETS _pbullets) {
 }
 // 关于子弹的计时器进程函数（包括画出子弹位置刷新，位置判定等）
 
+
+
+
+
 /*
 +
 -			静态函数定义
@@ -141,7 +187,7 @@ BulletsTimerProc(const PBULLETS _pbullets) {
 */
 
 static PBULLET
-CreateBullet(POINT _pos) {
+__createBullet(POINT _pos) {
 
 	PBULLET _pbullet = (PBULLET)malloc(sizeof(NODE));
 	if (!_pbullet)
@@ -159,7 +205,7 @@ CreateBullet(POINT _pos) {
 
 
 static BOOL
-EmptyBullets(const PBULLETS _pbullets) {
+__emptyBullets(const PBULLETS _pbullets) {
 
 	assert(_pbullets != NULL);
 
@@ -170,3 +216,91 @@ EmptyBullets(const PBULLETS _pbullets) {
 
 }
 // 判断子弹链表是否为空
+
+
+static STATUS
+__changeBullets_Pos_Distance(PBULLETS _pbullets) {
+
+	assert(_pbullets != NULL);
+
+	if (__emptyBullets(_pbullets))
+		return OK;
+
+	PBULLET _tmp = _pbullets->m_head;
+
+	while (_tmp != NULL) {
+
+		_tmp->m_pos.x += _pbullets->m_speed;
+		_tmp->m_dstance += _pbullets->m_speed;
+		_tmp = _tmp->m_next;
+
+	}
+
+	return OK;
+
+}
+// 改变子弹的位置，飞行距离
+
+
+static PBULLET
+__checkBulletsPos(const PBULLETS _pbullets) {
+
+	assert(_pbullets != NULL);
+
+	if (__emptyBullets(_pbullets))
+		return NULL;
+
+	PBULLET _tmp = _pbullets->m_head;
+
+	while (_tmp != NULL) {
+
+		if (_tmp->m_dstance >= _pbullets->m_maxDistance)
+			return _tmp;
+
+		_tmp = _tmp->m_next;
+
+	}
+
+	return NULL;
+
+}
+// 检查子弹位置，如果存在已经达到最大飞行距离的子弹，则返回这个子弹结点的位置
+
+
+static STATUS
+__freeBullet(PBULLETS _pbullets, PBULLET _pbullet) {
+
+	assert(_pbullets != NULL);
+
+	if (_pbullet == NULL)
+		return OK;
+
+	if (_pbullets->m_head == _pbullets->m_tail) {
+
+		free(_pbullet);
+		_pbullet = NULL;
+
+		_pbullets->m_head = NULL;
+		_pbullets->m_tail = NULL;
+
+		goto ending;
+
+	}
+	else if (_pbullets->m_head == _pbullet) {
+
+		_pbullets->m_head = _pbullet->m_next;
+
+		free(_pbullet);
+		_pbullet = NULL;
+
+		goto ending;
+
+	}
+
+ending:
+	_pbullets->m_cnt--;
+
+	return OK;
+
+}
+// 静态函数，释放此地址的子弹结点的内存资源
