@@ -106,6 +106,8 @@ DrawEffect(HDC _hdc, HDC _memDc, const POINT _pos, const UINT _effct_id) {
 		(EFF_SIZE + _effct_id)->cx, (EFF_SIZE + _effct_id)->cy,
 		RGB(255, 255, 255));
 
+	DeleteDC(_tmpDc);
+
 	return OK;
 
 }

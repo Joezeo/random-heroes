@@ -26,8 +26,8 @@
 // 按键上左右控制角色移动相关静态函数
 
 static STATUS
-__moveRole(PROLECFG, WPARAM, HWND);
-// 按键控制角色移动,跳跃
+__controlRole_keyDown(PROLECFG, WPARAM, HWND);
+// 按键控制角色相关静态函数(移动，跳跃，攻击)
 
 static STATUS
 __moveRole_left(PROLECFG);
@@ -39,11 +39,19 @@ __moveRole_right(PROLECFG);
 
 static STATUS
 __moveRole_up(PROLECFG);
-// 按下方向键上，改变角色移动状态为跳跃，计时器开始处理RoleJumpProc
+// 按下方向键上，改变角色移动状态为跳跃，计时器开始处理__roleJumpProc
+
+static STATUS
+__roleAttack(PROLECFG);
+// 按下S键，角色攻击
 
 
 /*---------------------------------------------------------------------*/
 // 角色跳跃相关静态函数
+
+static STATUS
+__roleJumpProc(PROLECFG);
+// 角色跳跃过程，此函数由Timer计时器控制
 
 static STATUS
 __jumpRole(PROLECFG);
@@ -80,7 +88,7 @@ __mapBoundaryDetermine_Image(PROLECFG, PIMAGE);
 // 以及通过判断DrawLocation属性来修改PROLECFG实例的m_f(b)mapEnd值
 // 而m_f(b)mapEnd可以辅助确定角色的客户区坐标m_clientPos
 // 角色客户区坐标与地图刷新密切相关
-// 角色客户区坐标在__moveRole时确定
+// 角色客户区坐标在__controlRole_keyDown时确定
 
 
 /*---------------------------------------------------------------------*/
@@ -93,6 +101,7 @@ __drawRole_walkFoward(const PROLECFG, PIMAGE, HDC);
 static STATUS
 __drawRole_walkBackwards(const PROLECFG, PIMAGE, HDC);
 // 角色向后走/跳跃时的图像
+
 
 
 
@@ -141,7 +150,8 @@ InitRole(HINSTANCE _hins) {
 	_prole->m_clientPos.x = 0;
 	_prole->m_clientPos.y = CLI_HEIGHT - _prole->m_size.cy;
 
-	_prole->m_roleifo = LoadRoleInfo();
+	_prole->m_roleifo  = LoadRoleInfo();
+	_prole->m_pbullets = InitBulletslk();
 
 	return _prole;
 
@@ -196,8 +206,8 @@ DrawRole(const HWND _hwnd, const PROLECFG _prole, PIMAGE _pimage) {
 	DrawWeapon(_prole->m_roleifo->m_weapon, _hdc, _pimage->m_memDc,
 		_prole->m_pos, _prole->m_mvDirection);
 
-	// 画出特效 //
-	// DrawEffect(_hdc, _pimage->m_memDc, _prole->m_pos, 1);
+	// 画出子弹 // 
+	DrawBullets(_prole->m_pbullets, _hdc, _pimage->m_memDc);
 
 	/*------------------------------------------------------------------------------*/
 
@@ -218,7 +228,7 @@ ControlRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 	if(_prole->m_moveStatus)
 		_prole->m_keyDownCnt++;
 
-	__moveRole(_prole, _wParam, _hwnd);
+	__controlRole_keyDown(_prole, _wParam, _hwnd);
 
 	return OK;
 
@@ -240,39 +250,27 @@ UnControlRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 
 
 STATUS
-RoleJumpProc(PROLECFG _prole, HWND _hwnd) {
+RoleTimerProc(PROLECFG _prole, HWND _hwnd) {
 
 	assert(_prole != NULL);
 	assert(_hwnd != NULL);
 
-	if (_prole->m_status == 0)
-		return OK;
+	// 跳跃 // 
+	__roleJumpProc(_prole);
 
-	__moveInertia(_prole);
+	// 子弹 //
+	BulletsTimerProc(_prole->m_pbullets);
 
-	// 跳跃后没有达到最大高度
-	if (!(_prole->m_highStatus) && _prole->m_status == 2) {
-
-		__jumpRole(_prole);
-
-	}
-	if (_prole->m_curHeight == _prole->m_maxHeight && _prole->m_status == 2) {
-
-		__highRole(_prole);
-
-	}
-	else if (_prole->m_highStatus) {
-
-		__fallRole(_prole);
-
-	}
-
+	// 清空屏幕，重绘，达到动画效果 //
 	InvalidateRect(_hwnd, NULL, TRUE);
 
 	return OK;
 
 }
-// 角色跳跃过程，此函数由Timer计时器控制
+// 角色相关的计时器进程函数（包括跳跃，子弹）
+
+
+
 
 
 
@@ -285,10 +283,10 @@ RoleJumpProc(PROLECFG _prole, HWND _hwnd) {
 */
 
 /*---------------------------------------------------------------------*/
-// 按键上左右控制角色移动相关静态函数
+// 按键控制角色相关静态函数(移动，跳跃，攻击)
 
 static STATUS
-__moveRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
+__controlRole_keyDown(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 
 	assert(_prole != NULL);
 
@@ -309,6 +307,12 @@ __moveRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 	case VK_UP: // 跳跃
 
 		__moveRole_up(_prole);
+
+		break;
+
+	case 0x53: // 攻击 S键
+
+		__roleAttack(_prole);
 
 		break;
 
@@ -439,11 +443,55 @@ __moveRole_up(PROLECFG _prole) {
 	return OK;
 
 }
-// 按下方向键上，改变角色移动状态为跳跃，计时器开始处理RoleJumpProc
+// 按下方向键上，改变角色移动状态为跳跃，计时器开始处理__roleJumpProc
+
+static STATUS
+__roleAttack(PROLECFG _prole) {
+
+	assert(_prole != NULL);
+
+	AddBullet(_prole->m_pbullets, _prole->m_pos);
+
+	return OK;
+
+}
+// 按下S键，角色攻击
 
 
 /*---------------------------------------------------------------------*/
 // 角色跳跃相关静态函数 
+
+static STATUS
+__roleJumpProc(PROLECFG _prole) {
+
+	assert(_prole != NULL);
+
+	if (_prole->m_status == 0)
+		return OK;
+
+	__moveInertia(_prole);
+
+	// 跳跃后没有达到最大高度
+	if (!(_prole->m_highStatus) && _prole->m_status == 2) {
+
+		__jumpRole(_prole);
+
+	}
+	if (_prole->m_curHeight == _prole->m_maxHeight && _prole->m_status == 2) {
+
+		__highRole(_prole);
+
+	}
+	else if (_prole->m_highStatus) {
+
+		__fallRole(_prole);
+
+	}
+
+	return OK;
+
+}
+// 角色跳跃过程，此函数由Timer计时器控制
 
 static STATUS
 __jumpRole(PROLECFG _prole) {
@@ -621,7 +669,7 @@ __mapBoundaryDetermine_Image(PROLECFG _prole, PIMAGE _pimage) {
 // 以及通过判断DrawLocation属性来修改PROLECFG实例的m_f(b)mapEnd值
 // 而m_f(b)mapEnd可以辅助确定角色的客户区坐标m_clientPos
 // 角色客户区坐标与地图刷新密切相关
-// 角色客户区坐标在__moveRole时确定
+// 角色客户区坐标在__controlRole_keyDown时确定
 
 
 /*---------------------------------------------------------------------*/

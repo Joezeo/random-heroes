@@ -30,6 +30,7 @@ extern "C" {
 #include "../IMAGE/image.h"
 #include "../EFFECT/effect.h"
 #include "./INFO/roleifo.h"
+#include "./BULLET/bullet.h"
 
 /*
 +
@@ -58,6 +59,7 @@ typedef struct {
 	POINT   m_clientPos;      // 角色在客户区的坐标
 
 	PROLEIFO m_roleifo;       // 角色游戏性信息（武器，等级，角色，金钱，背包等等）
+	PBULLETS m_pbullets;      // 子弹链表
 
 }ROLE_CONFIG, * PROLECFG;
 
@@ -88,8 +90,10 @@ UnControlRole(PROLECFG, WPARAM, HWND);
 // 按键抬起，角色不受控制时的状态
 
 STATUS
-RoleJumpProc(PROLECFG, HWND);
-// 角色跳跃过程，此函数由Timer计时器控制
+RoleTimerProc(PROLECFG, HWND);
+// 角色相关的计时器进程函数（包括跳跃，子弹）
+
+
 
 
 

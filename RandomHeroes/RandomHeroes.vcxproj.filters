@@ -39,6 +39,9 @@
     <ClCompile Include="..\FIGURE\INFO\roleifo.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\FIGURE\BULLET\bullet.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h">
@@ -66,6 +69,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\FIGURE\INFO\roleifo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FIGURE\BULLET\bullet.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

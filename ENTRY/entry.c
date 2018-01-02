@@ -65,7 +65,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 	hwnd = CreateWindow(
 		szWndClassName,		                  //windows class name
 		TEXT("Random Heroes"),			      //windows caption	
-		WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX,    //windows style
+		WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX, //windows style
 		CW_USEDEFAULT,		                  //intial x position
 		CW_USEDEFAULT,		                  //intial y position
 		rect.right - rect.left,		          //intial x size
@@ -140,7 +140,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	case WM_TIMER:
 
-		RoleJumpProc(prole, hwnd);
+		RoleTimerProc(prole, hwnd);
 
 		break;
 
