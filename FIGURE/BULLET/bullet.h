@@ -37,7 +37,7 @@ extern "C" {
 +
 */
 #define BULLET_SPEED 10;
-#define BULLET_INITIAL_POS_OFFSET_X  10 + 30
+#define BULLET_INITIAL_POS_OFFSET_X  10 + 32
 #define BULLET_INITIAL_POS_OFFSET_Y  7  + 5
 
 
@@ -92,7 +92,7 @@ DrawBullets(const PBULLETS, HDC, HDC);
 // 画出子弹链表中的子弹
 
 STATUS
-BulletsTimerProc(PBULLETS);
+BulletsTimerProc(PBULLETS, HWND);
 // 关于子弹的计时器进程函数（包括画出子弹位置刷新，位置判定等）
 
 #ifdef __cplusplus

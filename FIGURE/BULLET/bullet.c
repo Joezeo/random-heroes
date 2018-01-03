@@ -80,6 +80,26 @@ FreeBulletslk(PBULLETS _pbullets) {
 
 	assert(_pbullets != NULL);
 
+	PBULLET _pre = NULL;
+	PBULLET _cur = NULL;
+
+	if (!__emptyBullets(_pbullets)) {
+
+		_cur = _pbullets->m_head;
+
+		while (_cur != NULL) {
+
+			_pre = _cur->m_next;
+			__freeBullet(_pbullets, _cur);
+			_cur = _pre;
+
+		}
+
+	}
+
+	free(_pbullets);
+	_pbullets = NULL;
+
 	return OK;
 
 }
@@ -91,7 +111,12 @@ AddBullet(PBULLETS _pbullets, POINT _pos) {
 
 	assert(_pbullets != NULL);
 
-	PBULLET _newBullet = __createBullet(_pos);
+	POINT   _initialPos;
+
+	_initialPos.x = _pos.x + BULLET_INITIAL_POS_OFFSET_X;
+	_initialPos.y = _pos.y + BULLET_INITIAL_POS_OFFSET_Y;
+
+	PBULLET _newBullet = __createBullet(_initialPos);
 
 	if (__emptyBullets(_pbullets)) {
 
@@ -112,7 +137,6 @@ AddBullet(PBULLETS _pbullets, POINT _pos) {
 	}
 
 ending:
-
 	_pbullets->m_cnt++;
 
 	return OK;
@@ -133,14 +157,9 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 	
 	PBULLET _tmp = _pbullets->m_head;
 
-	POINT   _initialPos;
-	
 	while (_tmp != NULL) {
 
-		_initialPos.x = _tmp->m_pos.x + BULLET_INITIAL_POS_OFFSET_X;
-		_initialPos.y = _tmp->m_pos.y + BULLET_INITIAL_POS_OFFSET_Y;
-
-		DrawEffect(_hdc, _memDc, _initialPos, 7);
+		DrawEffect(_hdc, _memDc, _tmp->m_pos, 7);
 		_tmp = _tmp->m_next;
 
 	}
@@ -152,9 +171,12 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 
 
 STATUS
-BulletsTimerProc(PBULLETS _pbullets) {
+BulletsTimerProc(PBULLETS _pbullets, HWND _hwnd) {
 
 	assert(_pbullets != NULL);
+
+	if (__emptyBullets(_pbullets))
+		return OK;
 
 	PBULLET _rec = NULL;
 
@@ -170,6 +192,9 @@ BulletsTimerProc(PBULLETS _pbullets) {
 		__freeBullet(_pbullets, _rec);
 
 	}
+
+	// 清空屏幕，重绘，达到动画效果 //
+	InvalidateRect(_hwnd, NULL, TRUE);
 
 	return OK;
 

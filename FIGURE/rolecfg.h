@@ -82,7 +82,7 @@ DrawRole(const HWND, const PROLECFG, PIMAGE);
 // 画出角色，角色武器，角色相关特效
 
 STATUS
-ControlRole(PROLECFG, WPARAM, HWND);
+ControlRole(PROLECFG, PIMAGE, WPARAM, HWND);
 // 角色控制，移动跳跃
 
 STATUS
@@ -90,7 +90,7 @@ UnControlRole(PROLECFG, WPARAM, HWND);
 // 按键抬起，角色不受控制时的状态
 
 STATUS
-RoleTimerProc(PROLECFG, HWND);
+RoleTimerProc(PROLECFG, PIMAGE, HWND);
 // 角色相关的计时器进程函数（包括跳跃，子弹）
 
 

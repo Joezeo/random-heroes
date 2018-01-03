@@ -128,7 +128,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	case WM_KEYDOWN:
 
-		ControlRole(prole, wparam, hwnd);
+		ControlRole(prole, pimage, wparam, hwnd);
 
 		break;
 
@@ -140,7 +140,7 @@ WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	case WM_TIMER:
 
-		RoleTimerProc(prole, hwnd);
+		RoleTimerProc(prole, pimage, hwnd);
 
 		break;
 

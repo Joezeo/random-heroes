@@ -50,7 +50,7 @@ __roleAttack(PROLECFG);
 // 角色跳跃相关静态函数
 
 static STATUS
-__roleJumpProc(PROLECFG);
+__roleJumpProc(PROLECFG, HWND);
 // 角色跳跃过程，此函数由Timer计时器控制
 
 static STATUS
@@ -164,7 +164,9 @@ FreeRole(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
-	free(_prole->m_roleifo);
+	FreeBulletslk(_prole->m_pbullets);
+
+	FreeRoleInfo(_prole->m_roleifo);
 
 	free(_prole);
 
@@ -183,11 +185,6 @@ DrawRole(const HWND _hwnd, const PROLECFG _prole, PIMAGE _pimage) {
 
 	HDC               _hdc;
 	_hdc    = GetDC(_hwnd);
-
-	/*------------------------------------------------------------------------------*/
-
-	// 地图刷新功能 //
-	__mapBoundaryDetermine_Image(_prole, _pimage);
 
 	/*------------------------------------------------------------------------------*/
 
@@ -220,7 +217,7 @@ DrawRole(const HWND _hwnd, const PROLECFG _prole, PIMAGE _pimage) {
 
 
 STATUS
-ControlRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
+ControlRole(PROLECFG _prole, PIMAGE _pimage, WPARAM _wParam, HWND _hwnd) {
 
 	assert(_prole != NULL);
 	assert(_hwnd != NULL);
@@ -228,7 +225,13 @@ ControlRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 	if(_prole->m_moveStatus)
 		_prole->m_keyDownCnt++;
 
+	// 角色控制 //
 	__controlRole_keyDown(_prole, _wParam, _hwnd);
+
+	/*------------------------------------------------------------------------------*/
+
+	// 地图刷新功能 //
+	__mapBoundaryDetermine_Image(_prole, _pimage);
 
 	return OK;
 
@@ -250,19 +253,16 @@ UnControlRole(PROLECFG _prole, WPARAM _wParam, HWND _hwnd) {
 
 
 STATUS
-RoleTimerProc(PROLECFG _prole, HWND _hwnd) {
+RoleTimerProc(PROLECFG _prole, PIMAGE _pimage, HWND _hwnd) {
 
 	assert(_prole != NULL);
 	assert(_hwnd != NULL);
 
 	// 跳跃 // 
-	__roleJumpProc(_prole);
+	__roleJumpProc(_prole, _pimage, _hwnd);
 
 	// 子弹 //
-	BulletsTimerProc(_prole->m_pbullets);
-
-	// 清空屏幕，重绘，达到动画效果 //
-	InvalidateRect(_hwnd, NULL, TRUE);
+	BulletsTimerProc(_prole->m_pbullets, _hwnd);
 
 	return OK;
 
@@ -462,7 +462,7 @@ __roleAttack(PROLECFG _prole) {
 // 角色跳跃相关静态函数 
 
 static STATUS
-__roleJumpProc(PROLECFG _prole) {
+__roleJumpProc(PROLECFG _prole, PIMAGE _pimage, HWND _hwnd) {
 
 	assert(_prole != NULL);
 
@@ -487,6 +487,14 @@ __roleJumpProc(PROLECFG _prole) {
 		__fallRole(_prole);
 
 	}
+
+	/*------------------------------------------------------------------------------*/
+
+	// 地图刷新功能 //
+	__mapBoundaryDetermine_Image(_prole, _pimage);
+
+	// 清空屏幕，重绘，达到动画效果 //
+	InvalidateRect(_hwnd, NULL, TRUE);
 
 	return OK;
 
