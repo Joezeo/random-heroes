@@ -27,7 +27,7 @@ LoadRoleInfo() {
 
 	PROLEIFO _proleifo = (PROLEIFO)malloc(sizeof(ROLE_INFORMATON));
 	if (!_proleifo)
-		exit(OVERFLOW);
+		exit(OVERFLOWED);
 
 	_proleifo->m_weaponType = (WEAPON_TYPE)200;
 	_proleifo->m_weapon = LoadWeapon(g_hinst, _proleifo->m_weaponType);

@@ -37,8 +37,13 @@ extern "C" {
 +
 */
 #define BULLET_SPEED 10;
-#define BULLET_INITIAL_POS_OFFSET_X  10 + 32
-#define BULLET_INITIAL_POS_OFFSET_Y  7  + 5
+
+// 角色向前时枪口位置偏移量 //
+#define BULLET_FORWARD_INITIAL_POS_OFFSET_X   10 + 32
+#define BULLET_FORWARD_INITIAL_POS_OFFSET_Y   7  + 5
+// 角色向后时枪口位置偏移量 //
+#define BULLET_BACKWARD_INITIAL_POS_OFFSET_X  -41
+#define BULLET_BACKWARD_INITIAL_POS_OFFSET_Y  7 + 5
 
 
 /*
@@ -46,18 +51,19 @@ extern "C" {
 -			结构体定义
 +
 */
-// 子弹结点定义
+// 子弹结点定义 //
 typedef struct NODE {
 
 	POINT m_pos;
 	UINT  m_dstance;        // 子弹已经飞行的距离
+	BOOL  m_bltMvDirction;  // 子弹飞行方向，TRUE向前，FALSE向后
 
 	struct NODE * m_next;
 	struct NODE * m_pre;
 
 }NODE, * PNODE, * PBULLET;
 
-// 子弹链表定义
+// 子弹链表定义 //
 typedef struct {
 
 	PBULLET m_head;
@@ -84,7 +90,7 @@ FreeBulletslk(PBULLETS);
 // 释放子弹链表，以及所有子弹结点的内存资源
 
 STATUS
-AddBullet(PBULLETS, POINT);
+AddBullet(PBULLETS, POINT, BOOL);
 // 往子弹链表中添加一个子弹
 
 STATUS

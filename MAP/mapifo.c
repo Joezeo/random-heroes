@@ -38,7 +38,7 @@ InitMap(HINSTANCE _hins, HWND _hwnd) {
 
 	PMAP _pmap = (PMAP)malloc(sizeof(MAP));
 	if (!_pmap)
-		exit(OVERFLOW);
+		exit(OVERFLOWED);
 
 	HDC _hdc = GetDC(_hwnd);
 

@@ -50,7 +50,7 @@ __roleAttack(PROLECFG);
 // 角色跳跃相关静态函数
 
 static STATUS
-__roleJumpProc(PROLECFG, HWND);
+__roleJumpProc(PROLECFG, PIMAGE, HWND);
 // 角色跳跃过程，此函数由Timer计时器控制
 
 static STATUS
@@ -120,7 +120,7 @@ InitRole(HINSTANCE _hins) {
 	PROLECFG _prole = (PROLECFG)malloc(sizeof(ROLE_CONFIG));
 
 	if (!_prole)
-		exit(OVERFLOW);
+		exit(OVERFLOWED);
 
 	BITMAP            _bmp;
 
@@ -450,7 +450,7 @@ __roleAttack(PROLECFG _prole) {
 
 	assert(_prole != NULL);
 
-	AddBullet(_prole->m_pbullets, _prole->m_pos);
+	AddBullet(_prole->m_pbullets, _prole->m_pos, _prole->m_mvDirection);
 
 	return OK;
 

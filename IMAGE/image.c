@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.27 / 22：33
 +
--             修改时间：2017.12.30 / 16：16
+-             修改时间：2018.01.04 / 12：21
 +
 -             文件名称：image.c
 +
@@ -26,7 +26,7 @@ InitImage(HWND _hwnd) {
 
 	PIMAGE _pimage = (PIMAGE)malloc(sizeof(IMAGE));
 	if (!_pimage)
-		exit(OVERFLOW);
+		exit(OVERFLOWED);
 
 	HDC _hdc = GetDC(_hwnd);
 
@@ -81,3 +81,58 @@ DrawImage(const PIMAGE _pimage, HWND _hwnd) {
 
 }
 // 画出IMAGE实例中保存的图像
+
+
+inline int
+RotateDc(HDC _hdc, int _iAngle, POINT _centerPt) {
+
+	assert(_hdc != NULL);
+
+	int _nGraphicsMode = SetGraphicsMode(_hdc, GM_ADVANCED);
+	
+	XFORM _xfrom;
+
+	if (_iAngle != 0) {
+
+		double _fangle = (double)_iAngle / 180 * 3.1415926;
+
+		_xfrom.eM11 = (float)cos(_fangle);
+		_xfrom.eM12 = (float)sin(_fangle);
+		_xfrom.eM21 = (float)-sin(_fangle);
+		_xfrom.eM22 = (float)cos(_fangle);
+		_xfrom.eDx  = (float)(_centerPt.x - cos(_fangle) * _centerPt.x
+								+ sin(_fangle) * _centerPt.y);
+		_xfrom.eDy  = (float)(_centerPt.y - cos(_fangle) * _centerPt.y
+								- sin(_fangle) * _centerPt.x);
+
+		SetWorldTransform(_hdc, &_xfrom);
+
+	}
+
+	return _nGraphicsMode;
+
+}
+// 旋转HDC，使得HDC里的图像旋转
+
+
+inline STATUS
+RestoreRotateDc(HDC _hdc, int _nGraphicsMode) {
+
+	assert(_hdc != NULL);
+
+	XFORM _xform;
+
+	_xform.eM11 = (float)1.0;
+	_xform.eM12 = (float)0;
+	_xform.eM21 = (float)0;
+	_xform.eM22 = (float)1.0;
+	_xform.eDx  = (float)0;
+	_xform.eDy  = (float)0;
+
+	SetWorldTransform(_hdc, &_xform);
+	SetGraphicsMode(_hdc, _nGraphicsMode);
+
+	return OK;
+
+}
+// 恢复旋转后的HDC

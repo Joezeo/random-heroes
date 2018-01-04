@@ -21,7 +21,7 @@ LoadWeapon(HINSTANCE _hins, WEAPON_TYPE _type) {
 
 	PWEAPON _pweapon = (PWEAPON)malloc(sizeof(WEAPON));
 	if (!_pweapon)
-		exit(OVERFLOW);
+		exit(OVERFLOWED);
 
 	_pweapon->m_weaponHbmp_forward  = LoadBitmap(_hins, MAKEINTRESOURCE(_type));
 	_pweapon->m_weaponHbmp_backward = LoadBitmap(_hins, MAKEINTRESOURCE(_type + 1));

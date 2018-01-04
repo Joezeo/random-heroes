@@ -51,7 +51,7 @@ extern HINSTANCE             g_hinst;
 // ×´Ì¬Âë¶¨Òå
 #define OK         1
 #define FAILD     -1
-#define OVERFLOW  -2
+#define OVERFLOWED  -2
 
 typedef int STATUS;
 

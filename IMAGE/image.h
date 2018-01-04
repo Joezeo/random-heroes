@@ -4,7 +4,7 @@
 +
 -             创建时间：2017.12.27 / 22：33
 +
--             修改时间：2017.12.27 / 22：33
+-             修改时间：2018.01.04 / 12：21
 +
 -             文件名称：image.h
 +
@@ -26,6 +26,7 @@ extern "C" {
 -			包含头文件
 +
 */
+#include <math.h>
 #include "../SYS/systc.h"
 
 
@@ -59,6 +60,14 @@ FreeImage(PIMAGE);
 STATUS
 DrawImage(const PIMAGE, HWND);
 // 画出IMAGE实例中保存的图像
+
+inline int
+RotateDc(HDC, int, POINT);
+// 旋转HDC，使得HDC里的图像旋转
+
+inline STATUS
+RestoreRotateDc(HDC, int);
+// 恢复旋转后的HDC
 
 #ifdef __cplusplus
 }

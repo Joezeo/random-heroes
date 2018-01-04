@@ -27,7 +27,7 @@ InitCoordSize() {
 
 	PCAPEFF _pcapeff = (PCAPEFF)malloc(sizeof(CAPTURE_EFFECT));
 	if (!_pcapeff)
-		exit(OVERFLOW);
+		exit(OVERFLOWED);
 
 	for (int i = 0; i < CNT_EFFECTS; i++) {
 

@@ -22,7 +22,7 @@
 +
 */
 static PBULLET
-__createBullet(POINT);
+__createBullet(POINT, BOOL);
 // 静态函数，生成一个子弹结点
 
 
@@ -61,7 +61,7 @@ InitBulletslk() {
 
 	PBULLETS _pbullets = (PBULLETS)malloc(sizeof(BULLETS));
 	if (!_pbullets)
-		exit(OVERFLOW);
+		exit(OVERFLOWED);
 
 	_pbullets->m_head        = NULL;
 	_pbullets->m_tail        = NULL;
@@ -107,16 +107,28 @@ FreeBulletslk(PBULLETS _pbullets) {
 
 
 STATUS
-AddBullet(PBULLETS _pbullets, POINT _pos) {
+AddBullet(PBULLETS _pbullets, POINT _pos, BOOL _direction) {
 
 	assert(_pbullets != NULL);
 
 	POINT   _initialPos;
 
-	_initialPos.x = _pos.x + BULLET_INITIAL_POS_OFFSET_X;
-	_initialPos.y = _pos.y + BULLET_INITIAL_POS_OFFSET_Y;
+	// 子弹初始位置，即角色位置加上枪口位置偏移 //
+	if (_direction) {
 
-	PBULLET _newBullet = __createBullet(_initialPos);
+		_initialPos.x = _pos.x + BULLET_FORWARD_INITIAL_POS_OFFSET_X;
+		_initialPos.y = _pos.y + BULLET_FORWARD_INITIAL_POS_OFFSET_Y;
+
+	}
+	else {
+
+		_initialPos.x = _pos.x + BULLET_BACKWARD_INITIAL_POS_OFFSET_X;
+		_initialPos.y = _pos.y + BULLET_BACKWARD_INITIAL_POS_OFFSET_Y;
+
+	}
+
+
+	PBULLET _newBullet = __createBullet(_initialPos, _direction);
 
 	if (__emptyBullets(_pbullets)) {
 
@@ -212,16 +224,17 @@ BulletsTimerProc(PBULLETS _pbullets, HWND _hwnd) {
 */
 
 static PBULLET
-__createBullet(POINT _pos) {
+__createBullet(POINT _pos, BOOL _direction) {
 
 	PBULLET _pbullet = (PBULLET)malloc(sizeof(NODE));
 	if (!_pbullet)
-		exit(OVERFLOW);
+		exit(OVERFLOWED);
 
-	_pbullet->m_pos     = _pos;
-	_pbullet->m_dstance = 0;
-	_pbullet->m_next    = NULL;
-	_pbullet->m_pre     = NULL;
+	_pbullet->m_pos           = _pos;
+	_pbullet->m_dstance       = 0;
+	_pbullet->m_bltMvDirction = _direction;
+	_pbullet->m_next          = NULL;
+	_pbullet->m_pre           = NULL;
 
 	return _pbullet;
 
@@ -255,7 +268,11 @@ __changeBullets_Pos_Distance(PBULLETS _pbullets) {
 
 	while (_tmp != NULL) {
 
-		_tmp->m_pos.x += _pbullets->m_speed;
+		if(_tmp->m_bltMvDirction)
+			_tmp->m_pos.x += _pbullets->m_speed;
+		else
+			_tmp->m_pos.x -= _pbullets->m_speed;
+
 		_tmp->m_dstance += _pbullets->m_speed;
 		_tmp = _tmp->m_next;
 
