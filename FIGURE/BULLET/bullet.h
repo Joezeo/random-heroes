@@ -29,6 +29,7 @@ extern "C" {
 */
 #include "../../SYS/systc.h"
 #include "../../EFFECT/effect.h" // 从ALL_EFFECTS中截取子弹图像
+#include "../../IMAGE/image.h"   // 使用旋转函数
 
 
 /*

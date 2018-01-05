@@ -4,7 +4,7 @@
 +
 -             创建时间：2018.1.2 / 20：41
 +
--             修改时间：2018.1.2 / 20：41
+-             修改时间：2018.1.5 / 12：20
 +
 -             文件名称：bullet.c
 +
@@ -44,6 +44,16 @@ __checkBulletsPos(const PBULLETS);
 static STATUS
 __freeBullet(PBULLETS, PBULLET);
 // 静态函数，释放此地址的子弹结点的内存资源
+
+
+static HDC
+__loadBulletImage(HDC);
+// 加载子弹的图片，存于HDC中，并将其返回
+
+
+static STATUS
+__drawBullet(HDC, HDC, POINT);
+// 画出单个子弹
 
 
 
@@ -166,15 +176,27 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 
 	if (__emptyBullets(_pbullets))
 		return OK;
+
+	HDC     _tmpDc = __loadBulletImage(_hdc);
 	
-	PBULLET _tmp = _pbullets->m_head;
+	PBULLET _tmp   = _pbullets->m_head;
+
+	POINT   _centerPt;
+	_centerPt.x = 20 / 2;
+	_centerPt.y = 8 / 2;
 
 	while (_tmp != NULL) {
 
-		DrawEffect(_hdc, _memDc, _tmp->m_pos, 7);
+		if (!_tmp->m_bltMvDirction)
+			RotateDc(_tmpDc, 180, _centerPt);
+
+		__drawBullet(_tmpDc, _memDc, _tmp->m_pos);
+
 		_tmp = _tmp->m_next;
 
 	}
+
+	DeleteDC(_tmpDc);
 	
 	return OK;
 
@@ -344,3 +366,48 @@ ending:
 
 }
 // 静态函数，释放此地址的子弹结点的内存资源
+
+
+static HDC
+__loadBulletImage(HDC _hdc) {
+
+	assert(_hdc != NULL);
+
+	HDC       _memDc   = CreateCompatibleDC(_hdc);
+	HBITMAP   _tmpHbmp = CreateCompatibleBitmap(_hdc,
+												(EFF_SIZE + 7)->cx, (EFF_SIZE + 7)->cy);
+
+	SelectObject(_memDc, _tmpHbmp);
+
+	POINT  _pos;
+	_pos.x = 0;
+	_pos.y = 0;
+
+	DrawEffect(_hdc, _memDc, _pos, 7);
+
+	DeleteObject(_tmpHbmp);
+
+	return _memDc;
+
+}
+// 加载子弹的图片，存于HDC中，并将其返回
+
+
+static STATUS
+__drawBullet(HDC _tmpDc, HDC _memDc, POINT _pos) {
+
+	assert(_tmpDc != NULL);
+	assert(_memDc != NULL);
+
+	TransparentBlt(_memDc,
+		_pos.x, _pos.y,
+		(EFF_SIZE + 7)->cx, (EFF_SIZE + 7)->cy,
+		_tmpDc,
+		0, 0,
+		(EFF_SIZE + 7)->cx, (EFF_SIZE + 7)->cy,
+		RGB(0, 0, 0));
+
+	return OK;
+
+}
+// 画出单个子弹

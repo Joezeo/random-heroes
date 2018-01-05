@@ -83,7 +83,7 @@ DrawImage(const PIMAGE _pimage, HWND _hwnd) {
 // 画出IMAGE实例中保存的图像
 
 
-inline int
+int
 RotateDc(HDC _hdc, int _iAngle, POINT _centerPt) {
 
 	assert(_hdc != NULL);
@@ -115,7 +115,7 @@ RotateDc(HDC _hdc, int _iAngle, POINT _centerPt) {
 // 旋转HDC，使得HDC里的图像旋转
 
 
-inline STATUS
+STATUS
 RestoreRotateDc(HDC _hdc, int _nGraphicsMode) {
 
 	assert(_hdc != NULL);
