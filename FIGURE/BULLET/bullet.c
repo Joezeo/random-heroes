@@ -177,6 +177,9 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 	if (__emptyBullets(_pbullets))
 		return OK;
 
+	int     _result;
+	int     _flag = 0;
+
 	HDC     _tmpDc = __loadBulletImage(_hdc);
 	
 	PBULLET _tmp   = _pbullets->m_head;
@@ -187,10 +190,21 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 
 	while (_tmp != NULL) {
 
-		if (!_tmp->m_bltMvDirction)
-			RotateDc(_tmpDc, 180, _centerPt);
+		if (!_tmp->m_bltMvDirction) {
+
+			_result = RotateDc(_hdc, 180, _centerPt);
+			_flag   = 1;
+
+		}
 
 		__drawBullet(_tmpDc, _memDc, _tmp->m_pos);
+
+		if (_flag) {
+
+			RestoreRotateDc(_hdc, _result);
+			_flag = 0;
+
+		}
 
 		_tmp = _tmp->m_next;
 
