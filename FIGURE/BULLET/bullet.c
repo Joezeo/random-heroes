@@ -401,6 +401,8 @@ __loadBulletImage(HDC _hdc) {
 
 	DeleteObject(_tmpHbmp);
 
+	FreeCapEffct(P_CAP_EFFECT);
+
 	return _memDc;
 
 }
@@ -420,6 +422,8 @@ __drawBullet(HDC _tmpDc, HDC _memDc, POINT _pos) {
 		0, 0,
 		(EFF_SIZE + 7)->cx, (EFF_SIZE + 7)->cy,
 		RGB(0, 0, 0));
+
+	FreeCapEffct(P_CAP_EFFECT);
 
 	return OK;
 
