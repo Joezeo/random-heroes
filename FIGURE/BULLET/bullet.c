@@ -56,6 +56,11 @@ __drawBullet(HDC, HDC, POINT);
 // 画出单个子弹
 
 
+static STATUS
+__drawBulletRotate(HDC, HDC, POINT);
+// 将子弹位图进行旋转
+
+
 
 
 
@@ -177,8 +182,8 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 	if (__emptyBullets(_pbullets))
 		return OK;
 
-	int     _result;
-	int     _flag = 0;
+	int _result = 0;
+	int _flag = 0;
 
 	HDC     _tmpDc = __loadBulletImage(_hdc);
 	
@@ -193,11 +198,11 @@ DrawBullets(const PBULLETS _pbullets, HDC _hdc, HDC _memDc) {
 		if (!_tmp->m_bltMvDirction) {
 
 			_result = RotateDc(_tmpDc, 180, _centerPt);
-			_flag   = 1;
+			_flag = 1;
 
 		}
 
-		__drawBullet(_tmpDc, _memDc, _tmp->m_pos);
+			__drawBullet(_tmpDc, _memDc, _tmp->m_pos);
 
 		if (_flag) {
 
@@ -429,3 +434,23 @@ __drawBullet(HDC _tmpDc, HDC _memDc, POINT _pos) {
 
 }
 // 画出单个子弹
+
+
+static STATUS
+__drawBulletRotate(HDC _tmpDc, HDC _hdc, POINT _pos) {
+
+	POINT _argPt;
+
+	_argPt.x = 0 + (EFF_SIZE + 7)->cx;
+	_argPt.y = 0;
+
+	PlgBlt(_hdc, &_argPt, _tmpDc,
+		0, 0,
+		(EFF_SIZE + 7)->cx, (EFF_SIZE + 7)->cy,
+		NULL,
+		0, 0);
+
+	return OK;
+
+}
+// 将子弹位图进行旋转
