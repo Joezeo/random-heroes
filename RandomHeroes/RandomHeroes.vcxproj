@@ -120,6 +120,7 @@
     <ClCompile Include="..\FIGURE\WEAPON\weapon.c" />
     <ClCompile Include="..\IMAGE\image.c" />
     <ClCompile Include="..\MAP\mapifo.c" />
+    <ClCompile Include="..\STAGE\stage.c" />
     <ClCompile Include="..\SYS\systc.c" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +133,7 @@
     <ClInclude Include="..\FIGURE\WEAPON\weapon.h" />
     <ClInclude Include="..\IMAGE\image.h" />
     <ClInclude Include="..\MAP\mapifo.h" />
+    <ClInclude Include="..\STAGE\stage.h" />
     <ClInclude Include="..\SYS\systc.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

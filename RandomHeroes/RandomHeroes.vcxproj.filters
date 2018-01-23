@@ -45,6 +45,9 @@
     <ClCompile Include="..\ENEMY\enemy.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\STAGE\stage.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ENTRY\entry.h">
@@ -78,6 +81,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\ENEMY\enemy.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\STAGE\stage.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
