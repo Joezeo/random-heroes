@@ -112,6 +112,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\EFFECT\effect.c" />
+    <ClCompile Include="..\ENEMY\enemy.c" />
     <ClCompile Include="..\ENTRY\entry.c" />
     <ClCompile Include="..\FIGURE\BULLET\bullet.c" />
     <ClCompile Include="..\FIGURE\INFO\roleifo.c" />
@@ -123,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\EFFECT\effect.h" />
+    <ClInclude Include="..\ENEMY\enemy.h" />
     <ClInclude Include="..\ENTRY\entry.h" />
     <ClInclude Include="..\FIGURE\BULLET\bullet.h" />
     <ClInclude Include="..\FIGURE\INFO\roleifo.h" />
